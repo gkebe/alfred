@@ -14,8 +14,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--alfred_data_dir', type=str, help='json_feat_2.1.0 directory from the original Alfred data', required=True)
 parser.add_argument('--output_dir', type=str, help='directory where data with new annotations will be saved', required=True)
-parser.add_argument('--transcriptions_json', type=float, help='.jsonl file with transcriptions of spoken annotations', required=True)
-parser.add_argument('--splits_json', type=float, help='json file with train/val/test splits', required=True)
+parser.add_argument('--transcriptions_json', type=str, help='.jsonl file with transcriptions of spoken annotations', required=True)
+parser.add_argument('--splits_json', type=str, help='json file with train/val/test splits', required=True)
 args = parser.parse_args()
 
 # where alfred data is located
