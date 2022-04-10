@@ -18,7 +18,7 @@ cd alfred
 
 Symlink data into shared folder
 ```bash
-$ ln -s nfs/ada/cmat/common/alfred_data ./data/shared
+$ ln -s /nfs/ada/cmat/common/alfred_data ./data/shared
 ```
 
 Our preprocessing:
