@@ -3,5 +3,8 @@ exp/*
 !data/*.py
 !data/*.sh
 !data/*.md
+!data/*.jsonl
 !data/splits
 !data/json_2.1.0
+.idea/
+.DS_Store
