@@ -1,6 +1,13 @@
-<hr style="border:2px solid black"> </hr>
+# EventBERT
 
-# ALFRED
+This repository is a modified version of the [ALFRED Repository](https://github.com/askforalfred/alfred).
+
+## Changes Made:
+
+- Added 
+
+
+<hr style="border:2px solid black"> </hr>
 
 [<b>A Benchmark for Interpreting Grounded Instructions for Everyday Tasks</b>](https://arxiv.org/abs/1912.01734)  
 [Mohit Shridhar](https://mohitshridhar.com/), [Jesse Thomason](https://jessethomason.com/), [Daniel Gordon](https://homes.cs.washington.edu/~xkcd/), [Yonatan Bisk](https://yonatanbisk.com/),  
