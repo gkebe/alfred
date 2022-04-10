@@ -11,13 +11,13 @@ import argparse
 import sys
 
 parser = argparse.ArgumentParser()
-parser.add_argument('in_file', type=str, help='a jsonl file of completed task annotations')
-parser.add_argument('tests_percent', type=float, help='A number between 0.0 and 1.0')
-parser.add_argument('train_percent', type=float, help='A number between 0.0 and 1.0')
-parser.add_argument('valid_percent', type=float, help='A number between 0.0 and 1.0')
-parser.add_argument('seed', type=float, help='A float to seed the shuffle. Default is 0.5', 
+parser.add_argument('--in_file', type=str, help='a jsonl file of completed task annotations')
+parser.add_argument('--tests_percent', type=float, help='A number between 0.0 and 1.0')
+parser.add_argument('--train_percent', type=float, help='A number between 0.0 and 1.0')
+parser.add_argument('--valid_percent', type=float, help='A number between 0.0 and 1.0')
+parser.add_argument('--seed', type=float, help='A float to seed the shuffle. Default is 0.5',
                     default=0.5)
-parser.add_argument('out_file', type=str, help='File to write output json to')
+parser.add_argument('--out_file', type=str, help='File to write output json to')
 args = parser.parse_args()
 
 

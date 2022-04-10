@@ -9,15 +9,23 @@ Created on Sat Apr  9 14:20:39 2022
 import shutil
 import json
 import os
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--alfred_data_dir', type=str, help='json_feat_2.1.0 directory from the original Alfred data', required=True)
+parser.add_argument('--output_dir', type=str, help='directory where data with new annotations will be saved', required=True)
+parser.add_argument('--transcriptions_json', type=float, help='.jsonl file with transcriptions of spoken annotations', required=True)
+parser.add_argument('--splits_json', type=float, help='json file with train/val/test splits', required=True)
+args = parser.parse_args()
 
 # where alfred data is located
-alfred_data_dir = '/nfs/ada/cmat/common/data/json_feat_2.1.0/'
+alfred_data_dir = args.alfred_data_dir
 # where we are putting alfred data
-annotations_dir = '/nfs/ada/cmat/common/data/annotations_2022_04_09/'
+annotations_dir = args.output_dir
 
-transcriptions_json = 'coded_transcripts.jsonl'
+transcriptions_jsonl = args.transcriptions_json
 
-splits_json = "splits_out.json"
+splits_json = args.splits_json
 
 # if where we are moving data already exists delete it
 if os.path.exists(annotations_dir):
