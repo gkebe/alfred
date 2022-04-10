@@ -4,9 +4,37 @@ This repository is a modified version of the [ALFRED Repository](https://github.
 
 ## Changes Made:
 
-- Added 
+- Added preprocessing scripts in *./data*
+- Added *--no_alignment* flag to *data/preprocess.py* and *model/train_seq2seq* to ignore alignment between step-by-step language and action sequence segments.
 
+## Quickstart
 
+Clone repo:
+```bash
+$ git clone git@github.com:gkebe/alfred.git
+$ export ALFRED_ROOT=$(pwd)/alfred
+cd alfred
+```
+
+Symlink data into shared folder
+```bash
+$ ln -s nfs/ada/cmat/common/alfred_data ./data/shared
+```
+
+Our preprocessing:
+* Quick batch script (creates a 70-15-15 split with seed=71, creates directory *{new_data_dir}* inside *./data/shared/*, and organizes it according to the generated splits)
+  ```bash
+  $ bash data/preprocess.sh {split_file_name} {new_data_dir}
+  ```
+* Or run the python scripts in ./data/preprocess.sh yourself to change the arguments. 
+  
+Run Alfred:
+
+* First run on new data: add *--preprocess* and *--no_alignment* flags
+  ```bash
+  python models/train/train_seq2seq.py --data data/shared/{new_data_dir} --model seq2seq_im_mask --dout exp/model:{model},name:pm_and_subgoals_01 --splits data/shared/{split_file_name} --gpu --batch 8 --pm_aux_loss_wt 0.1 --subgoal_aux_loss_wt 0.1 --preprocess --no_alignment
+  ```
+* No need for *--preprocess* and *--no_alignment* flags in subsequent runs for the same data
 <hr style="border:2px solid black"> </hr>
 
 [<b>A Benchmark for Interpreting Grounded Instructions for Everyday Tasks</b>](https://arxiv.org/abs/1912.01734)  

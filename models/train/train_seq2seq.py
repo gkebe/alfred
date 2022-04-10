@@ -30,6 +30,8 @@ if __name__ == '__main__':
     parser.add_argument('--use_templated_goals', help='use templated goals instead of human-annotated goal descriptions (only available for train set)', action='store_true')
     parser.add_argument('--resume', help='load a checkpoint')
 
+    parser.add_argument('--no_alignment', help='ignores alignment between step-by-step language and action sequence segments', action='store_true')
+
     # hyper parameters
     parser.add_argument('--batch', help='batch size', default=8, type=int)
     parser.add_argument('--epoch', help='number of epochs', default=20, type=int)

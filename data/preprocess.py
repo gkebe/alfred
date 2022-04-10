@@ -175,18 +175,19 @@ class Dataset(object):
             })
 
         # check alignment between step-by-step language and action sequence segments
-        action_low_seg_len = len(traj['num']['action_low'])
-        lang_instr_seg_len = len(traj['num']['lang_instr'])
-        seg_len_diff = action_low_seg_len - lang_instr_seg_len
-        if seg_len_diff != 0:
-            assert (seg_len_diff == 1) # sometimes the alignment is off by one  ¯\_(ツ)_/¯
-            self.merge_last_two_low_actions(traj)
+        if not args.no_alignment:
+            action_low_seg_len = len(traj['num']['action_low'])
+            lang_instr_seg_len = len(traj['num']['lang_instr'])
+            seg_len_diff = action_low_seg_len - lang_instr_seg_len
+            if seg_len_diff != 0:
+                assert (seg_len_diff == 1) # sometimes the alignment is off by one  ¯\_(ツ)_/¯
+                self.merge_last_two_low_actions(traj)
 
-            # fix last two for low_to_high_idx and action_high from merge (from: https://github.com/askforalfred/alfred/issues/84)
-            traj['num']['low_to_high_idx'][-1] = traj['num']['action_low'][-1][0]["high_idx"]
-            traj['num']['low_to_high_idx'][-2] = traj['num']['action_low'][-2][0]["high_idx"]
-            traj['num']['action_high'][-1]["high_idx"] = traj['num']['action_high'][-2]["high_idx"]
-            traj['num']['action_high'][-2]["high_idx"] = traj['num']['action_high'][-3]["high_idx"]
+                # fix last two for low_to_high_idx and action_high from merge (from: https://github.com/askforalfred/alfred/issues/84)
+                traj['num']['low_to_high_idx'][-1] = traj['num']['action_low'][-1][0]["high_idx"]
+                traj['num']['low_to_high_idx'][-2] = traj['num']['action_low'][-2][0]["high_idx"]
+                traj['num']['action_high'][-1]["high_idx"] = traj['num']['action_high'][-2]["high_idx"]
+                traj['num']['action_high'][-2]["high_idx"] = traj['num']['action_high'][-3]["high_idx"]
 
     def fix_missing_high_pddl_end_action(self, ex):
         '''

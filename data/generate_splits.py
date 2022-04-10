@@ -85,6 +85,6 @@ parent_dict["train"] = train_splits
 parent_dict["valid"] = valid_splits
 
 
-with open(args.out_file, "w") as target:
+with open(os.open(args.out_file, os.O_CREAT | os.O_WRONLY, 0o777), "w") as target:
     json.dump(parent_dict, target, indent = 4)
 target.close()
