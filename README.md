@@ -1,4 +1,4 @@
-***
+<hr style="border:2px solid black"> </hr>
 
 # ALFRED
 
