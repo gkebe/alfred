@@ -1,4 +1,4 @@
-# EventBERT
+# ALFRED
 
 This repository is a modified version of the [ALFRED Repository](https://github.com/askforalfred/alfred).
 
