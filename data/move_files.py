@@ -23,7 +23,7 @@ alfred_data_dir = args.alfred_data_dir
 # where we are putting alfred data
 annotations_dir = args.output_dir
 
-transcriptions_jsonl = args.transcriptions_json
+transcriptions_json = args.transcriptions_json
 
 splits_json = args.splits_json
 
