@@ -1,0 +1,7 @@
+data/*
+exp/*
+!data/*.py
+!data/*.sh
+!data/*.md
+!data/splits
+!data/json_2.1.0
