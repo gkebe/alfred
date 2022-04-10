@@ -2,6 +2,7 @@ import json
 import random
 import argparse
 import sys
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--in_file', type=str, help='a jsonl file of completed task annotations')
