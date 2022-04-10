@@ -1,10 +1,3 @@
-#
-#
-#
-#
-#
-#
-
 import json
 import random
 import argparse
