@@ -49,8 +49,12 @@ class Module(nn.Module):
 
         # splits
         train = splits['train']
-        valid_seen = splits['valid_seen']
-        valid_unseen = splits['valid_unseen']
+        if "valid_seen" in splits:
+            valid_seen = splits['valid_seen']
+            valid_unseen = splits['valid_unseen']
+        else:
+            valid_seen = splits['valid']
+            valid_unseen = splits['valid']
 
         # debugging: chose a small fraction of the dataset
         if self.args.dataset_fraction > 0:
