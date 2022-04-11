@@ -176,7 +176,7 @@ class Dataset(object):
             })
 
         # check alignment between step-by-step language and action sequence segments
-        if not args.no_alignment:
+        if not self.args.no_alignment:
             action_low_seg_len = len(traj['num']['action_low'])
             lang_instr_seg_len = len(traj['num']['lang_instr'])
             seg_len_diff = action_low_seg_len - lang_instr_seg_len
