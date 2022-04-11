@@ -106,8 +106,8 @@ for trial, trial_dicts in trials.items():
         our_anns.append(trial_ann)
     
     traj["turk_annotations"]["anns"] = our_anns
-    with open(os.open(new_path +"/"+ "traj_data.json", os.O_CREAT | os.O_WRONLY, 0o777), "w") as outfile:
+    with open(new_path +"/"+ "traj_data.json", "w") as outfile:
         json.dump(traj, outfile, indent=4)
-        counter += 1
+    counter += 1
         
 print('Done')
