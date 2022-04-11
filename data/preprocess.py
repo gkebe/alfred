@@ -51,6 +51,7 @@ class Dataset(object):
             for task in progressbar.progressbar(d):
                 # load json file
                 json_path = os.path.join(self.args.data, k, task['task'], 'traj_data.json')
+                print(json_path)
                 with open(json_path) as f:
                     ex = json.load(f)
 
