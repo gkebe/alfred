@@ -101,16 +101,21 @@ class Dataset(object):
         # step-by-step instructions
         high_descs = ex['turk_annotations']['anns'][r_idx]['high_descs']
 
+        # intention explanation
+        task_intent = ex['turk_annotations']['anns'][r_idx]['task_intent']
+
         # tokenize language
         traj['ann'] = {
             'goal': revtok.tokenize(remove_spaces_and_lower(task_desc)) + ['<<goal>>'],
             'instr': [revtok.tokenize(remove_spaces_and_lower(x)) for x in high_descs] + [['<<stop>>']],
+            'intent': [revtok.tokenize(remove_spaces_and_lower(x)) for x in task_intent] + [['<<stop>>']],
             'repeat_idx': r_idx
         }
 
         # numericalize language
         traj['num'] = {}
         traj['num']['lang_goal'] = self.numericalize(self.vocab['word'], traj['ann']['goal'], train=True)
+        traj['num']['lang_intent'] = self.numericalize(self.vocab['word'], traj['ann']['intent'], train=True)
         traj['num']['lang_instr'] = [self.numericalize(self.vocab['word'], x, train=True) for x in traj['ann']['instr']]
 
 
