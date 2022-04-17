@@ -108,7 +108,7 @@ class Dataset(object):
         traj['ann'] = {
             'goal': revtok.tokenize(remove_spaces_and_lower(task_desc)) + ['<<goal>>'],
             'instr': [revtok.tokenize(remove_spaces_and_lower(x)) for x in high_descs] + [['<<stop>>']],
-            'intent': revtok.tokenize(remove_spaces_and_lower(task_desc)) + ['<<intent>>'],
+            'intent': revtok.tokenize(remove_spaces_and_lower(task_intent)) + ['<<intent>>'],
             'repeat_idx': r_idx
         }
 
