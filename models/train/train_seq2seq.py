@@ -30,6 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_templated_goals', help='use templated goals instead of human-annotated goal descriptions (only available for train set)', action='store_true')
     parser.add_argument('--resume', help='load a checkpoint')
 
+    parser.add_argument('--pretrained_model', help='pretrained language model to use in seq2seq_pretrained_mask', default='bert')
     parser.add_argument('--no_alignment', help='ignores alignment between step-by-step language and action sequence segments', action='store_true')
 
     # hyper parameters
