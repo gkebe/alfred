@@ -18,7 +18,7 @@ class Dataset(object):
 
         if vocab is None:
             self.vocab = {
-                'word': Vocab(['<<pad>>', '<<seg>>', '<<goal>>']),
+                'word': Vocab(['<<pad>>', '<<seg>>', '<<goal>>', '<<intent>>']),
                 'action_low': Vocab(['<<pad>>', '<<seg>>', '<<stop>>']),
                 'action_high': Vocab(['<<pad>>', '<<seg>>', '<<stop>>']),
             }
@@ -108,7 +108,7 @@ class Dataset(object):
         traj['ann'] = {
             'goal': revtok.tokenize(remove_spaces_and_lower(task_desc)) + ['<<goal>>'],
             'instr': [revtok.tokenize(remove_spaces_and_lower(x)) for x in high_descs] + [['<<stop>>']],
-            'intent': [revtok.tokenize(remove_spaces_and_lower(x)) for x in task_intent] + [['<<stop>>']],
+            'intent': revtok.tokenize(remove_spaces_and_lower(task_desc)) + ['<<intent>>'],
             'repeat_idx': r_idx
         }
 
