@@ -102,7 +102,7 @@ class Module(Base):
             lang_instr = self.zero_input(lang_instr) if self.args.zero_instr else lang_instr
 
             # append goal + instr
-            lang_goal_instr = lang_goal + lang_instr
+            lang_goal_instr = [lang_goal] + lang_instr
             feat['lang_goal_instr'].append(lang_goal_instr)
 
             # load Resnet features from disk
