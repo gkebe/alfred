@@ -51,8 +51,7 @@ for split, ann_list in splits_dict.items():
         ann_features["task_intent"] = proc_sentence(ann_dict["task_intent"]).detach().to('cpu')
 
         ann_features["lang_instr"] = [proc_sentence(step).detach().to('cpu') for step in ann_dict["high_descs"]]
-
-        features[ann["task"]][f"ann_{ann['repeat_idx']}.json"] = ann_features
+        features[f"{ann['task']}/ann_{ann['repeat_idx']}.json"] = ann_features
 
 
 with open(os.path.join(args.data_dir, "bert_features.pkl"), 'wb') as f:
