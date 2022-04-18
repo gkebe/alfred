@@ -147,7 +147,7 @@ class Module(Base):
         for k, v in feat.items():
             if k in {'lang_goal_instr'}:
                 # language embedding and padding
-                seqs = [torch.stack(vv, device=device) for vv in v]
+                seqs = [torch.stack([vvv.to(device) for vvv in vv]) for vv in v]
                 pad_seq = pad_sequence(seqs, batch_first=True, padding_value=self.pad)
                 seq_lengths = np.array(list(map(len, v)))
                 packed_input = pack_padded_sequence(pad_seq, seq_lengths, batch_first=True, enforce_sorted=False)
