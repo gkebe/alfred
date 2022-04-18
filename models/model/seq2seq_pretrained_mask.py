@@ -23,7 +23,7 @@ class Module(Base):
 
         # encoder and self-attention
         # set LSTM input size to dimension of pretrained embeddings
-        dinp = self.features.values()[0]['lang_goal'].dim[-1]
+        dinp = list(self.features.values())[0]['lang_goal'].dim[-1]
         self.enc = nn.LSTM(dinp, args.dhid, bidirectional=True, batch_first=True)
         self.enc_att = vnn.SelfAttn(args.dhid*2)
 
