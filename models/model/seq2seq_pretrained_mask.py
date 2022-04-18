@@ -94,7 +94,7 @@ class Module(Base):
 
             # goal and instr language
             print(ex.keys())
-            ex_features = self.features[f"{ex['task']}/ann_{ex['repeat_idx']}.json"]
+            ex_features = self.features[f"{ex['root']}/ann_{ex['repeat_idx']}.json"]
             lang_goal, lang_instr = ex_features['lang_goal'], ex_features['lang_instr']
 
             # zero inputs if specified
