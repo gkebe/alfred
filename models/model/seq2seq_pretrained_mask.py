@@ -22,7 +22,9 @@ class Module(Base):
         self.features = pickle.load(open(os.path.join(args.data, f"{args.pretrained_model}_features.pkl"), "rb"))
 
         # encoder and self-attention
-        self.enc = nn.LSTM(args.demb, args.dhid, bidirectional=True, batch_first=True)
+        # set LSTM input size to dimension of pretrained embeddings
+        dinp = self.features.values()[0]['lang_goal'].dim[-1]
+        self.enc = nn.LSTM(dinp, args.dhid, bidirectional=True, batch_first=True)
         self.enc_att = vnn.SelfAttn(args.dhid*2)
 
         # subgoal monitoring
