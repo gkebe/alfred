@@ -47,7 +47,7 @@ with open(args.splits_json, 'r') as json_file:
     splits_dict = json.loads(json_file.read())
 
 for split, ann_list in tqdm(splits_dict.items()):
-    for ann in ann_list:
+    for ann in tqdm(ann_list):
         with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_{ann['repeat_idx']}.json"), 'r') as ann_file:
             ann_json = json.loads(ann_file.read())
             ann_dict = ann_json["turk_annotations"]["anns"][ann_json["repeat_idx"]]
