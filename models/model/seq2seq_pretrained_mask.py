@@ -93,6 +93,7 @@ class Module(Base):
             self.serialize_action(ex)
 
             # goal and instr language
+            print(ex.keys())
             ex_features = self.features[f"{ex['task']}/ann_{ex['repeat_idx']}.json"]
             lang_goal, lang_instr = ex_features['lang_goal'], ex_features['lang_instr']
 
