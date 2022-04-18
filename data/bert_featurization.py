@@ -37,7 +37,7 @@ def proc_sentence(t):
 features = {}
 
 # Opening JSON file with splits
-with open(splits_json, 'r') as json_file:
+with open(args.splits_json, 'r') as json_file:
     splits_dict = json.loads(json_file.read())
 
 for split, ann_list in splits_dict.items():
