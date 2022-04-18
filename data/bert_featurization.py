@@ -31,6 +31,11 @@ def setup_device(gpu_num=0):
 document_embeddings = flair.embeddings.DocumentPoolEmbeddings([flair.embeddings.BertEmbeddings()])
 
 def proc_sentence(t):
+    t = t.strip()
+    if not t:
+        sentence = flair.data.Sentence("hello", use_tokenizer=True)
+        document_embeddings.embed(sentence)
+        return torch.zeros_like(sentence.get_embedding())
     sentence = flair.data.Sentence(t, use_tokenizer=True)
     document_embeddings.embed(sentence)
     return sentence.get_embedding()
