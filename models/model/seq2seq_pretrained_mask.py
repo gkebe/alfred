@@ -9,7 +9,7 @@ from torch.nn.utils.rnn import pad_sequence, pack_padded_sequence, pad_packed_se
 from model.seq2seq import Module as Base
 from models.utils.metric import compute_f1, compute_exact
 from gen.utils.image_util import decompress_mask
-
+import pickle
 
 class Module(Base):
 
@@ -18,6 +18,8 @@ class Module(Base):
         Seq2Seq agent
         '''
         super().__init__(args, vocab)
+
+        features = pickle.load(open(os.path.join(args.data, f"{args.pretrained_model}_features.pkl")))
 
         # encoder and self-attention
         self.enc = nn.LSTM(args.demb, args.dhid, bidirectional=True, batch_first=True)
@@ -88,10 +90,11 @@ class Module(Base):
             #########
 
             # serialize segments
-            self.serialize_lang_action(ex)
+            self.serialize_action(ex)
 
             # goal and instr language
-            lang_goal, lang_instr = ex['num']['lang_goal'], ex['num']['lang_instr']
+            ex_features = features[f"{ex['task']}/ann_{ex['repeat_idx']}.json"]
+            lang_goal, lang_instr = ex_features['lang_goal'], ex_features['lang_instr']
 
             # zero inputs if specified
             lang_goal = self.zero_input(lang_goal) if self.args.zero_goal else lang_goal
@@ -146,8 +149,7 @@ class Module(Base):
                 seqs = [torch.tensor(vv, device=device) for vv in v]
                 pad_seq = pad_sequence(seqs, batch_first=True, padding_value=self.pad)
                 seq_lengths = np.array(list(map(len, v)))
-                embed_seq = self.emb_word(pad_seq)
-                packed_input = pack_padded_sequence(embed_seq, seq_lengths, batch_first=True, enforce_sorted=False)
+                packed_input = pack_padded_sequence(pad_seq, seq_lengths, batch_first=True, enforce_sorted=False)
                 feat[k] = packed_input
             elif k in {'action_low_mask'}:
                 # mask padding
@@ -167,15 +169,15 @@ class Module(Base):
         return feat
 
 
-    def serialize_lang_action(self, feat):
+    def serialize_action(self, feat):
         '''
-        append segmented instr language and low-level actions into single sequences
+        append segmented low-level actions into single sequences
         '''
-        is_serialized = not isinstance(feat['num']['lang_instr'][0], list)
-        if not is_serialized:
-            feat['num']['lang_instr'] = [word for desc in feat['num']['lang_instr'] for word in desc]
-            if not self.test_mode:
-                feat['num']['action_low'] = [a for a_group in feat['num']['action_low'] for a in a_group]
+
+        if not self.test_mode:
+            is_serialized = not isinstance(feat['num']['action_low'][0], list)
+            if not is_serialized:
+                    feat['num']['action_low'] = [a for a_group in feat['num']['action_low'] for a in a_group]
 
 
     def decompress_mask(self, compressed_mask):
