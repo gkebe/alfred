@@ -23,7 +23,6 @@ class Module(Base):
 
         # encoder and self-attention
         # set LSTM input size to dimension of pretrained embeddings
-        print(list(self.features.values())[0]['lang_goal'].size(-1))
         dinp = list(self.features.values())[0]['lang_goal'].size(-1)
         self.enc = nn.LSTM(dinp, args.dhid, bidirectional=True, batch_first=True)
         self.enc_att = vnn.SelfAttn(args.dhid*2)
@@ -96,7 +95,6 @@ class Module(Base):
             self.serialize_action(ex)
 
             # goal and instr language
-            print(ex.keys())
             ex_features = self.features[f"{'/'.join(ex['root'].split('/')[-2:])}/ann_{ex['repeat_idx']}.json"]
             lang_goal, lang_instr = ex_features['lang_goal'], ex_features['lang_instr']
 
