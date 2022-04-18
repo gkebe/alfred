@@ -13,6 +13,7 @@ import flair
 import pickle
 import argparse
 import json
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', type=str, help='directory where annotations are saved', required=True)
