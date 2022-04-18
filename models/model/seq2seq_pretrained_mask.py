@@ -19,7 +19,7 @@ class Module(Base):
         '''
         super().__init__(args, vocab)
 
-        features = pickle.load(open(os.path.join(args.data, f"{args.pretrained_model}_features.pkl")))
+        self.features = pickle.load(open(os.path.join(args.data, f"{args.pretrained_model}_features.pkl"), "rb"))
 
         # encoder and self-attention
         self.enc = nn.LSTM(args.demb, args.dhid, bidirectional=True, batch_first=True)
@@ -93,7 +93,7 @@ class Module(Base):
             self.serialize_action(ex)
 
             # goal and instr language
-            ex_features = features[f"{ex['task']}/ann_{ex['repeat_idx']}.json"]
+            ex_features = self.features[f"{ex['task']}/ann_{ex['repeat_idx']}.json"]
             lang_goal, lang_instr = ex_features['lang_goal'], ex_features['lang_instr']
 
             # zero inputs if specified
