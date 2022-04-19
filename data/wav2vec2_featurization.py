@@ -47,7 +47,7 @@ with open(args.splits_json, 'r') as json_file:
 
 for split, ann_list in tqdm(splits_dict.items()):
     for ann in tqdm(ann_list):
-        speech_dir = os.path.join(data_dir, ann["task"], "pp", f"ann_{ann['repeat_idx']}_speech")
+        speech_dir = os.path.join(args.data_dir, ann["task"], "pp", f"ann_{ann['repeat_idx']}_speech")
         ann_features = {}
         ann_features["lang_goal"] = wav2vec2_embed(f"{speech_dir}/summary.wav").detach().to('cpu')
         ann_features["task_intent"] = wav2vec2_embed(f"{speech_dir}/intention.wav").detach().to('cpu')
