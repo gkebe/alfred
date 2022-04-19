@@ -12,6 +12,7 @@ import os
 import argparse
 import librosa
 import soundfile as sf
+import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', type=str, help='directory where annotations are saved', required=True)
