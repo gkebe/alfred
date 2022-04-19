@@ -29,6 +29,7 @@ def num_steps(dir_path):
     return len([name for name in os.listdir(dir_path) if "step" in name])
 
 def wav2vec2_embed(wav_path):
+    if
     speech, _ = sf.read(wav_path)
     input_values = processor(speech, return_tensors="pt", sampling_rate=16000).input_values.cuda()
     with torch.no_grad():
@@ -50,7 +51,7 @@ for split, ann_list in tqdm(splits_dict.items()):
         speech_dir = os.path.join(args.data_dir, ann["task"], "pp", f"ann_{ann['repeat_idx']}_speech")
         ann_features = {}
         ann_features["lang_goal"] = wav2vec2_embed(f"{speech_dir}/summary.wav").detach().to('cpu')
-        ann_features["task_intent"] = wav2vec2_embed(f"{speech_dir}/intention.wav").detach().to('cpu')
+        ann_features["lang_intent"] = wav2vec2_embed(f"{speech_dir}/intention.wav").detach().to('cpu')
 
         ann_features["lang_instr"] = [wav2vec2_embed(f"{speech_dir}/step_{i}.wav").detach().to('cpu') for i in range(1, num_steps(speech_dir) + 1)]
 

@@ -45,7 +45,7 @@ for split, ann_list in tqdm(splits_dict.items()):
             ann_dict = ann_json["turk_annotations"]["anns"][ann_json["repeat_idx"]]
         ann_features = {}
         ann_features["lang_goal"] = proc_sentence(ann_dict["task_desc"]).detach().to('cpu')
-        ann_features["task_intent"] = proc_sentence(ann_dict["task_intent"]).detach().to('cpu')
+        ann_features["lang_intent"] = proc_sentence(ann_dict["task_intent"]).detach().to('cpu')
 
         ann_features["lang_instr"] = [proc_sentence(step).detach().to('cpu') for step in ann_dict["high_descs"]]
         features[f"{ann['task']}/ann_{ann['repeat_idx']}.json"] = ann_features
