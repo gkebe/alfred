@@ -38,6 +38,8 @@ for split, ann_list in tqdm(splits_dict.items()):
         with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_{ann['repeat_idx']}.json"), 'r') as ann_file:
             ann_json = json.loads(ann_file.read())
             ann_dict = ann_json["turk_annotations"]["anns"][ann_json["repeat_idx"]]
+        if os.path.exists(dest_dir):
+            shutil.rmtree(dest_dir)
         os.mkdir(dest_dir)
         src_dir = os.path.join(speech_dir, ann["task"].replace("/", "_"), ann_dict["worker_id"])
         for filename in tqdm(os.listdir(src_dir)):
