@@ -20,14 +20,6 @@ parser.add_argument('--data_dir', type=str, help='directory where annotations ar
 parser.add_argument('--splits_json', type=str, help='json file with train/val/test splits', required=True)
 args = parser.parse_args()
 
-def setup_device(gpu_num=0):
-    """Setup device."""
-    device_name = 'cuda:'+str(gpu_num) if torch.cuda.is_available() else 'cpu'  # Is there a GPU?
-    device = torch.device(device_name)
-    return device
-#astype = lambda x: np.array(x).astype(np.uint8)
-
-
 document_embeddings = flair.embeddings.DocumentPoolEmbeddings([flair.embeddings.BertEmbeddings()])
 
 def proc_sentence(t):

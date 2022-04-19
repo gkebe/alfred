@@ -15,30 +15,29 @@ import argparse
 import json
 import os
 
+import torchaudio
+from transformers import Wav2Vec2Processor, Wav2Vec2Model
+
+import soundfile as sf
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', type=str, help='directory where annotations are saved', required=True)
 parser.add_argument('--splits_json', type=str, help='json file with train/val/test splits', required=True)
 args = parser.parse_args()
 
-def setup_device(gpu_num=0):
-    """Setup device."""
-    device_name = 'cuda:'+str(gpu_num) if torch.cuda.is_available() else 'cpu'  # Is there a GPU?
-    device = torch.device(device_name)
-    return device
-#astype = lambda x: np.array(x).astype(np.uint8)
+def num_steps(dir_path):
+    return len([name for name in os.listdir(dir_path) if "step" in name])
 
+def wav2vec2_embed(wav_path):
+    speech, _ = sf.read(wav_path)
+    input_values = processor(speech, return_tensors="pt", sampling_rate=16000).input_values.cuda()
+    with torch.no_grad():
+       hidden_states = model(input_values, output_hidden_states=True).hidden_states
+    hidden_states = torch.cat([i for i in hidden_states][-4:]).transpose(0,1).contiguous().view(-1, 3072)
+    return torch.mean(hidden_states, dim=0).view(-1)
 
-document_embeddings = flair.embeddings.DocumentPoolEmbeddings([flair.embeddings.BertEmbeddings()])
-
-def proc_sentence(t):
-    t = t.strip()
-    if not t:
-        sentence = flair.data.Sentence("hello", use_tokenizer=True)
-        document_embeddings.embed(sentence)
-        return torch.zeros_like(sentence.get_embedding())
-    sentence = flair.data.Sentence(t, use_tokenizer=True)
-    document_embeddings.embed(sentence)
-    return sentence.get_embedding()
+processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
+model = Wav2Vec2Model.from_pretrained("facebook/wav2vec2-base-960h").cuda()
 
 features = {}
 
@@ -48,16 +47,15 @@ with open(args.splits_json, 'r') as json_file:
 
 for split, ann_list in tqdm(splits_dict.items()):
     for ann in tqdm(ann_list):
-        with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_{ann['repeat_idx']}.json"), 'r') as ann_file:
-            ann_json = json.loads(ann_file.read())
-            ann_dict = ann_json["turk_annotations"]["anns"][ann_json["repeat_idx"]]
+        speech_dir = os.path.join(data_dir, ann["task"], "pp", f"ann_{ann['repeat_idx']}_speech")
         ann_features = {}
-        ann_features["lang_goal"] = proc_sentence(ann_dict["task_desc"]).detach().to('cpu')
-        ann_features["task_intent"] = proc_sentence(ann_dict["task_intent"]).detach().to('cpu')
+        ann_features["lang_goal"] = wav2vec2_embed(f"{speech_dir}/summary.wav").detach().to('cpu')
+        ann_features["task_intent"] = wav2vec2_embed(f"{speech_dir}/intention.wav").detach().to('cpu')
 
-        ann_features["lang_instr"] = [proc_sentence(step).detach().to('cpu') for step in ann_dict["high_descs"]]
+        ann_features["lang_instr"] = [wav2vec2_embed(f"{speech_dir}/step_{i}.wav").detach().to('cpu') for i in range(1, num_steps(speech_dir) + 1)]
+
         features[f"{ann['task']}/ann_{ann['repeat_idx']}.json"] = ann_features
 
 
-with open(os.path.join(args.data_dir, "bert_features.pkl"), 'wb') as f:
+with open(os.path.join(args.data_dir, "wav2vec2_features.pkl"), 'wb') as f:
     pickle.dump(features, f)
