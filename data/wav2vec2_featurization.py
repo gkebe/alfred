@@ -29,7 +29,6 @@ def num_steps(dir_path):
     return len([name for name in os.listdir(dir_path) if "step" in name])
 
 def wav2vec2_embed(wav_path):
-    if
     speech, _ = sf.read(wav_path)
     input_values = processor(speech, return_tensors="pt", sampling_rate=16000).input_values.cuda()
     with torch.no_grad():
