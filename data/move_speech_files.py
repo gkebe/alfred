@@ -41,5 +41,7 @@ for split, ann_list in tqdm(splits_dict.items()):
         os.mkdir(dest_dir)
         src_dir = os.path.join(speech_dir, ann["task"].replace("/", "_"), ann_dict["worker_id"])
         for filename in tqdm(os.listdir(src_dir)):
+            if ".wav" not in filename:
+                continue
             y, s = librosa.load(os.path.join(src_dir, filename), sr=16000)
             sf.write(os.path.join(dest_dir, filename), y, s)
