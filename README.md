@@ -35,7 +35,6 @@ Run Alfred:
   python models/train/train_seq2seq.py --data data/shared/{new_data_dir} --model seq2seq_im_mask --dout exp/model:{model},name:pm_and_subgoals_01 --splits data/shared/{split_file_name} --gpu --batch 8 --pm_aux_loss_wt 0.1 --subgoal_aux_loss_wt 0.1 --preprocess --no_alignment
   ```
 * No need for *--preprocess* and *--no_alignment* flags in subsequent runs for the same data
-<hr style="border:2px solid black"> </hr>
 
 ## Docker for evaluation
 ```bash
@@ -50,6 +49,7 @@ python check_thor.py
   ## Everything works!!!
 ```
 
+<hr style="border:2px solid black"> </hr>
 [<b>A Benchmark for Interpreting Grounded Instructions for Everyday Tasks</b>](https://arxiv.org/abs/1912.01734)  
 [Mohit Shridhar](https://mohitshridhar.com/), [Jesse Thomason](https://jessethomason.com/), [Daniel Gordon](https://homes.cs.washington.edu/~xkcd/), [Yonatan Bisk](https://yonatanbisk.com/),  
 [Winson Han](https://allenai.org/team.html), [Roozbeh Mottaghi](http://roozbehm.info/), [Luke Zettlemoyer](https://www.cs.washington.edu/people/faculty/lsz), [Dieter Fox](https://homes.cs.washington.edu/~fox/)  
