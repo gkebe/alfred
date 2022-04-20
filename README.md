@@ -37,6 +37,19 @@ Run Alfred:
 * No need for *--preprocess* and *--no_alignment* flags in subsequent runs for the same data
 <hr style="border:2px solid black"> </hr>
 
+## Docker for evaluation
+```bash
+screen -S xserver
+Xorg -noreset +extension GLX +extension RANDR +extension RENDER :0
+# detach from screen
+# Ctrl + Alt + D
+cd scripts
+python check_thor.py
+###############
+  ## (300, 300, 3)
+  ## Everything works!!!
+```
+
 [<b>A Benchmark for Interpreting Grounded Instructions for Everyday Tasks</b>](https://arxiv.org/abs/1912.01734)  
 [Mohit Shridhar](https://mohitshridhar.com/), [Jesse Thomason](https://jessethomason.com/), [Daniel Gordon](https://homes.cs.washington.edu/~xkcd/), [Yonatan Bisk](https://yonatanbisk.com/),  
 [Winson Han](https://allenai.org/team.html), [Roozbeh Mottaghi](http://roozbehm.info/), [Luke Zettlemoyer](https://www.cs.washington.edu/people/faculty/lsz), [Dieter Fox](https://homes.cs.washington.edu/~fox/)  
