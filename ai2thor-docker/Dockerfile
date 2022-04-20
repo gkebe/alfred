@@ -1,4 +1,7 @@
-FROM nvidia/cuda:11.4.0-cudnn8-devel-ubuntu18.04
+ARG CUDA_VERSION
+
+FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu18.04
+ARG NVIDIA_VERSION
 
 ARG USER_NAME
 ARG USER_PASSWORD
@@ -15,14 +18,10 @@ RUN yes $USER_PASSWORD | passwd $USER_NAME
 RUN usermod -u $USER_ID $USER_NAME
 RUN groupmod -g $USER_GID $USER_NAME
 
-# work directory
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get -y install python3-pip libvulkan1 python3-virtualenv python3-dev vim pciutils wget git kmod vim git xorg screen
+
 WORKDIR /home/$USER_NAME
-
-# install system dependencies
-COPY ./scripts/install_deps.sh /tmp/install_deps.sh
-RUN yes "Y" | /tmp/install_deps.sh
-
-# setup python environment
 RUN cd $WORKDIR
 ENV VIRTUAL_ENV=/home/$USER_NAME/alfred_env
 RUN python3 -m virtualenv --python=/usr/bin/python3 $VIRTUAL_ENV
@@ -34,16 +33,10 @@ RUN pip install -U setuptools
 COPY ./requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
-# install GLX-Gears (for debugging)
-RUN apt-get update && apt-get install -y \
-   mesa-utils && \
-   rm -rf /var/lib/apt/lists/*
-
-# change ownership of everything to our user
 RUN mkdir /home/$USER_NAME/alfred
 RUN cd ${USER_HOME_DIR} && echo $(pwd) && chown $USER_NAME:$USER_NAME -R .
+copy ./scripts/install_nvidia.sh /home/$USER_NAME/
+RUN NVIDIA_VERSION=$NVIDIA_VERSION /home/$USER_NAME/install_nvidia.sh
 
-# copy scripts
-COPY ./scripts/startx.py /home/$USER_NAME/
 
 ENTRYPOINT bash -c "export ALFRED_ROOT=~/alfred && /bin/bash"
