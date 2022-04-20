@@ -54,7 +54,7 @@ Xorg -noreset +extension GLX +extension RANDR +extension RENDER :0
 # detach from screen
 # Ctrl + Alt + D
 cd scripts
-python check_thor.py
+python /home/$USER/alfred/ai2thor-docker/scripts/check_thor.py
 ###############
   ## (300, 300, 3)
   ## Everything works!!!
@@ -62,7 +62,9 @@ python check_thor.py
 
 Evaluate
 ```bash
-
+source activate /home/$USER/alfred_env/
+export ALFRED_ROOT=/home/$USER/alfred
+python models/eval/eval_seq2seq.py --model_path exp/model:{model}/best_seen.pth --eval_split valid --data data/shared/{new_data_dir} --model seq2seq_im_mask --gpu --num_threads 3
 ```
 
 <hr style="border:2px solid black"> </hr>
