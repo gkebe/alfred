@@ -7,4 +7,4 @@ then
 else
     EXTRA="-v $1"
 fi
-docker run --rm -it --privileged -v $ALFREDPATH:/home/$USER/alfred -v ~/.ssh:/home/$USER/.ssh -v ~/.torch:/home/$USER/.torch $EXTRA ai2thor-docker bash --user $USER
+docker run --rm -it --privileged -v $ALFREDPATH:/home/$USER/alfred -v ~/.ssh:/home/$USER/.ssh -v ~/.torch:/home/$USER/.torch -e ALFRED_ROOT=/home/$USER/alfred -e HOME=/home/$USER $EXTRA ai2thor-docker bash --user $USER
