@@ -29,11 +29,12 @@ RUN cd ${USER_HOME_DIR} && echo $(pwd) && chown $USER_NAME:$USER_NAME -R .
 copy ./scripts/install_nvidia.sh /home/$USER_NAME/
 RUN NVIDIA_VERSION=$NVIDIA_VERSION /home/$USER_NAME/install_nvidia.sh
 
-
-ENTRYPOINT bash -c "export ALFRED_ROOT=~/alfred && /bin/bash"
 RUN wget \
     https://repo.anaconda.com/miniconda/Miniconda3-py37_4.11.0-Linux-x86_64.sh \
-    && mkdir /root/.conda \
     && bash Miniconda3-py37_4.11.0-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-latest-Linux-x86_64.sh 
-RUN conda --version
+    && rm -f Miniconda3-latest-Linux-x86_64.sh \
+    && PATH='/root/miniconda3/bin:$PATH' \
+    && printf "PATH='/root/miniconda3/bin:$PATH'" >> ${WORKDIR}/.bashrc \
+    && conda init
+
+ENTRYPOINT bash -c "export ALFRED_ROOT=~/alfred && PATH="/root/miniconda3/bin:$PATH" >> ~/.bashrc && conda init && /bin/bash"
