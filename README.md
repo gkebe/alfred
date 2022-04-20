@@ -37,6 +37,17 @@ Run Alfred:
 * No need for *--preprocess* and *--no_alignment* flags in subsequent runs for the same data
 
 ## Docker for evaluation
+Build docker container
+```bash
+bash ai2thor-docker/scripts/build.sh
+```
+
+Run it
+```bash
+bash ai2thor-docker/scripts/run.sh
+```
+
+Start and test xserver
 ```bash
 screen -S xserver
 Xorg -noreset +extension GLX +extension RANDR +extension RENDER :0
@@ -47,6 +58,11 @@ python check_thor.py
 ###############
   ## (300, 300, 3)
   ## Everything works!!!
+```
+
+Evaluate
+```bash
+
 ```
 
 <hr style="border:2px solid black"> </hr>
