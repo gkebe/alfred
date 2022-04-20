@@ -32,8 +32,8 @@ RUN NVIDIA_VERSION=$NVIDIA_VERSION /home/$USER_NAME/install_nvidia.sh
 
 ENTRYPOINT bash -c "export ALFRED_ROOT=~/alfred && /bin/bash"
 RUN wget \
-    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    https://repo.anaconda.com/miniconda/Miniconda3-py37_4.11.0-Linux-x86_64.sh \
     && mkdir /root/.conda \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && bash Miniconda3-py37_4.11.0-Linux-x86_64.sh -b \
     && rm -f Miniconda3-latest-Linux-x86_64.sh 
 RUN conda --version
