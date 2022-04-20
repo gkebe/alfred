@@ -26,6 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', type=str, default="model.pth")
     parser.add_argument('--model', type=str, default='models.model.seq2seq_im_mask')
     parser.add_argument('--preprocess', dest='preprocess', action='store_true')
+    parser.add_argument('--no_alignment', help='ignores alignment between step-by-step language and action sequence segments', action='store_true')
     parser.add_argument('--shuffle', dest='shuffle', action='store_true')
     parser.add_argument('--gpu', dest='gpu', action='store_true')
     parser.add_argument('--use_templated_goals', help='use templated goals instead of human-annotated goal descriptions (only available for train set)', action='store_true')
