@@ -50,7 +50,8 @@ bash ai2thor-docker/scripts/run.sh
 Start and test xserver
 ```bash
 screen -S xserver
-Xorg -noreset +extension GLX +extension RANDR +extension RENDER :0
+sudo 
+sudo Xorg -noreset +extension GLX +extension RANDR +extension RENDER :0
 # detach from screen
 # Ctrl + Alt + D
 python $HOME/alfred/ai2thor-docker/scripts/check_thor.py

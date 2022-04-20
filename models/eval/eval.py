@@ -39,6 +39,8 @@ class Eval(object):
 
         # preprocess and save
         if args.preprocess:
+            if args.no_alignment:
+                self.model.args.no_alignment = args.no_alignment
             print("\nPreprocessing dataset and saving to %s folders ... This is will take a while. Do this once as required:" % self.model.args.pp_folder)
             self.model.args.fast_epoch = self.args.fast_epoch
             dataset = Dataset(self.model.args, self.model.vocab)
