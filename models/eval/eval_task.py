@@ -59,9 +59,11 @@ class EvalTask(Eval):
         fails = 0
         t = 0
         reward = 0
+        outcome = ""
         while not done:
             # break if max_steps reached
             if t >= args.max_steps:
+                outcome = "Agent took %d steps" % t
                 break
 
             # extract visual features
@@ -76,6 +78,7 @@ class EvalTask(Eval):
             # check if <<stop>> was predicted
             if m_pred['action_low'] == cls.STOP_TOKEN:
                 print("\tpredicted STOP")
+                outcome = "Agent stopped before reaching goal" % t
                 break
 
             # get action and mask
@@ -92,6 +95,7 @@ class EvalTask(Eval):
                 fails += 1
                 if fails >= args.max_fails:
                     print("Interact API failed %d times" % fails + "; latest error '%s'" % err)
+                    outcome = "Interact API failed %d times" % fails + "; latest error '%s'" % err
                     break
 
             # next time-step
@@ -104,6 +108,7 @@ class EvalTask(Eval):
         if goal_satisfied:
             print("Goal Reached")
             success = True
+            outcome = "Goal Reached"
 
 
         # goal_conditions
@@ -122,6 +127,7 @@ class EvalTask(Eval):
         # log success/fails
         lock.acquire()
         log_entry = {'trial': traj_data['task_id'],
+                     'root': traj_data['root'],
                      'type': traj_data['task_type'],
                      'repeat_idx': int(r_idx),
                      'goal_instr': goal_instr,
@@ -135,7 +141,9 @@ class EvalTask(Eval):
                      'goal_condition_spl': float(pc_spl),
                      'path_len_weighted_goal_condition_spl': float(plw_pc_spl),
                      'path_len_weight': int(path_len_weight),
-                     'reward': float(reward)}
+                     'reward': float(reward),
+                     'outcome': outcome,
+                     }
         if success:
             successes.append(log_entry)
         else:
