@@ -51,11 +51,10 @@ bash scripts/run.sh
 Start and test xserver
 ```bash
 screen -S xserver
-sudo 
-sudo Xorg -noreset +extension GLX +extension RANDR +extension RENDER :0
+sudo nvidia-xconfig -a --use-display-device=None --virtual=1280x1024
+sudo python3 ~/alfred/ai2thor-docker/scripts/startx.py 0
 # detach from screen
 # Ctrl + Alt + D
-python $HOME/alfred/ai2thor-docker/scripts/check_thor.py
 ###############
   ## (300, 300, 3)
   ## Everything works!!!
@@ -66,7 +65,7 @@ Evaluate
 # create conda environment, install requirements (or clone/mount it from host) and activate it
 conda activate {alfred_env}
 cd $ALFRED_ROOT
-python models/eval/eval_seq2seq.py --model_path exp/model:{model}/best_seen.pth --eval_split valid --data data/shared/{new_data_dir} --model seq2seq_im_mask --gpu --num_threads 3
+python models/eval/eval_seq2seq.py --model_path exp/model:{model}/best_seen.pth --eval_split valid --data data/shared/{new_data_dir} --model model.seq2seq_im_mask --gpu --num_threads 3 --splits data/shared/2022_04_10.json
 ```
 
 <hr style="border:2px solid black"> </hr>
