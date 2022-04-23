@@ -197,7 +197,7 @@ class PickAndPlaceSimpleTask(BaseTask):
             s += 1
             gc_met += ["object_in_receptacle"]
 
-        return s, ts, gc_met
+        return s, ts, gc_met, gc_all
 
     def reset(self):
         super().reset()
