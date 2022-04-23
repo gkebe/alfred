@@ -127,6 +127,8 @@ class EvalTask(Eval):
                      'goal_instr': goal_instr,
                      'completed_goal_conditions': int(pcs[0]),
                      'total_goal_conditions': int(pcs[1]),
+                     'completed_goal_conditions_list': pcs[2],
+                     'total_goal_conditions_list': pcs[3],
                      'goal_condition_success': float(goal_condition_success_rate),
                      'success_spl': float(s_spl),
                      'path_len_weighted_success_spl': float(plw_s_spl),

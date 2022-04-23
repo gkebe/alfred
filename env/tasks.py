@@ -243,7 +243,7 @@ class PickTwoObjAndPlaceTask(BaseTask):
                                    and p['objectId'] in r['receptacleObjectIds'] else 0
                               for p in pickupables])
                          for r in receptacles]), 2)]
-        return s, ts
+        return s, ts, gc_met, gc_all
 
     def reset(self):
         super().reset()
@@ -292,7 +292,7 @@ class LookAtObjInLightTask(BaseTask):
             s += 1
             gc_met += ["lamp_is_on"]
 
-        return s, ts
+        return s, ts, gc_met, gc_all
 
     def reset(self):
         super().reset()
@@ -349,7 +349,7 @@ class PickHeatThenPlaceInRecepTask(BaseTask):
             s += 1
             gc_met += ["heated_object_in_receptacle"]
 
-        return s, ts
+        return s, ts, gc_met, gc_all
 
     def reset(self):
         super().reset()
@@ -405,7 +405,7 @@ class PickCoolThenPlaceInRecepTask(BaseTask):
             s += 1
             gc_met += ["cooled_object_in_receptacle"]
 
-        return s, ts
+        return s, ts, gc_met, gc_all
 
     def reset(self):
         super().reset()
@@ -461,7 +461,7 @@ class PickCleanThenPlaceInRecepTask(BaseTask):
             s += 1
             gc_met += ["cleaned_object_in_receptacle"]
 
-        return s, ts
+        return s, ts, gc_met, gc_all
 
     def reset(self):
         super().reset()
@@ -524,7 +524,7 @@ class PickAndPlaceWithMovableRecepTask(BaseTask):
             s += 1
             gc_met += ["object_and_movable_in_receptacle"]
 
-        return s, ts
+        return s, ts, gc_met, gc_all
 
     def reset(self):
         super().reset()
