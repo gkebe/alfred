@@ -39,12 +39,13 @@ Run Alfred:
 ## Docker for evaluation
 Build docker container
 ```bash
-bash ai2thor-docker/scripts/build.sh
+cd ai2thor-docker
+bash scripts/build.sh
 ```
 
 Run it
 ```bash
-bash ai2thor-docker/scripts/run.sh
+bash scripts/run.sh
 ```
 
 Start and test xserver
@@ -62,7 +63,8 @@ python $HOME/alfred/ai2thor-docker/scripts/check_thor.py
 
 Evaluate
 ```bash
-source activate $HOME/alfred_env/
+# create conda environment, install requirements (or clone/mount it from host) and activate it
+conda activate {alfred_env}
 cd $ALFRED_ROOT
 python models/eval/eval_seq2seq.py --model_path exp/model:{model}/best_seen.pth --eval_split valid --data data/shared/{new_data_dir} --model seq2seq_im_mask --gpu --num_threads 3
 ```
