@@ -180,18 +180,24 @@ class PickAndPlaceSimpleTask(BaseTask):
         receptacles = get_objects_with_name_and_prop(targets['parent'], 'receptacle', state.metadata)
         pickupables = get_objects_with_name_and_prop(targets['object'], 'pickupable', state.metadata)
 
+        gc_all = []
+        gc_met = []
+
         # check if object needs to be sliced
         if 'Sliced' in targets['object']:
             ts += 1
+            gc_all += ["object_sliced"]
             if len([p for p in pickupables if 'Sliced' in p['objectId']]) >= 1:
                 s += 1
-
+                gc_met += ["object_sliced"]
+        gc_all += ["object_in_receptacle"]
         if np.any([np.any([p['objectId'] in r['receptacleObjectIds']
                            for r in receptacles if r['receptacleObjectIds'] is not None])
                    for p in pickupables]):
             s += 1
+            gc_met += ["object_in_receptacle"]
 
-        return s, ts
+        return s, ts, gc_met
 
     def reset(self):
         super().reset()
@@ -218,16 +224,25 @@ class PickTwoObjAndPlaceTask(BaseTask):
         receptacles = get_objects_with_name_and_prop(targets['parent'], 'receptacle', state.metadata)
         pickupables = get_objects_with_name_and_prop(targets['object'], 'pickupable', state.metadata)
 
+        gc_all = []
+        gc_met = []
+
         # check if object needs to be sliced
         if 'Sliced' in targets['object']:
             ts += 2
+            gc_all += ["object1_sliced", "object2_sliced"]
             s += min(len([p for p in pickupables if 'Sliced' in p['objectId']]), 2)
-
+            gc_met += ["object1_sliced", "object2_sliced"][:min(len([p for p in pickupables if 'Sliced' in p['objectId']]), 2)]
+        gc_all += ["object1_in_receptacle", "object2_in_receptacle"]
         # placing each object counts as a goal_condition
         s += min(np.max([sum([1 if r['receptacleObjectIds'] is not None
                                    and p['objectId'] in r['receptacleObjectIds'] else 0
                               for p in pickupables])
                          for r in receptacles]), 2)
+        gc_met += ["object1_in_receptacle", "object2_in_receptacle"][:min(np.max([sum([1 if r['receptacleObjectIds'] is not None
+                                   and p['objectId'] in r['receptacleObjectIds'] else 0
+                              for p in pickupables])
+                         for r in receptacles]), 2)]
         return s, ts
 
     def reset(self):
@@ -256,18 +271,26 @@ class LookAtObjInLightTask(BaseTask):
         pickupables = get_objects_with_name_and_prop(targets['object'], 'pickupable', state.metadata)
         inventory_objects = state.metadata['inventoryObjects']
 
+        gc_all = []
+        gc_met = []
+
         # check if object needs to be sliced
         if 'Sliced' in targets['object']:
             ts += 1
+            gc_all += ["object_sliced"]
             if len([p for p in pickupables if 'Sliced' in p['objectId']]) >= 1:
                 s += 1
+                gc_met += ["object_sliced"]
 
+        gc_all += ["object_in_hand", "lamp_is_on"]
         # check if the right object is in hand
         if len(inventory_objects) > 0 and inventory_objects[0]['objectId'] in [p['objectId'] for p in pickupables]:
             s += 1
+            gc_met += ["object_in_hand"]
         # check if the lamp is visible and turned on
         if np.any([t['isToggled'] and t['visible'] for t in toggleables]):
             s += 1
+            gc_met += ["lamp_is_on"]
 
         return s, ts
 
@@ -296,25 +319,35 @@ class PickHeatThenPlaceInRecepTask(BaseTask):
         receptacles = get_objects_with_name_and_prop(targets['parent'], 'receptacle', state.metadata)
         pickupables = get_objects_with_name_and_prop(targets['object'], 'pickupable', state.metadata)
 
+        gc_all = []
+        gc_met = []
+
         # check if object needs to be sliced
         if 'Sliced' in targets['object']:
             ts += 1
+            gc_all += ["object_sliced"]
             if len([p for p in pickupables if 'Sliced' in p['objectId']]) >= 1:
                 s += 1
+                gc_met += ["object_sliced"]
 
         objs_in_place = [p['objectId'] for p in pickupables for r in receptacles
                          if r['receptacleObjectIds'] is not None and p['objectId'] in r['receptacleObjectIds']]
         objs_heated = [p['objectId'] for p in pickupables if p['objectId'] in self.env.heated_objects]
 
+        gc_all += ["object_in_receptacle", "object_heated", "heated_object_in_receptacle"]
+
         # check if object is in the receptacle
         if len(objs_in_place) > 0:
             s += 1
+            gc_met += ["object_in_receptacle"]
         # check if some object was heated
         if len(objs_heated) > 0:
             s += 1
+            gc_met += ["object_heated"]
         # check if the object is both in the receptacle and hot
         if np.any([obj_id in objs_heated for obj_id in objs_in_place]):
             s += 1
+            gc_met += ["heated_object_in_receptacle"]
 
         return s, ts
 
@@ -343,24 +376,34 @@ class PickCoolThenPlaceInRecepTask(BaseTask):
         receptacles = get_objects_with_name_and_prop(targets['parent'], 'receptacle', state.metadata)
         pickupables = get_objects_with_name_and_prop(targets['object'], 'pickupable', state.metadata)
 
+        gc_all = []
+        gc_met = []
+
         if 'Sliced' in targets['object']:
             ts += 1
+            gc_all += ["object_sliced"]
             if len([p for p in pickupables if 'Sliced' in p['objectId']]) >= 1:
                 s += 1
+                gc_met += ["object_sliced"]
 
         objs_in_place = [p['objectId'] for p in pickupables for r in receptacles
                          if r['receptacleObjectIds'] is not None and p['objectId'] in r['receptacleObjectIds']]
         objs_cooled = [p['objectId'] for p in pickupables if p['objectId'] in self.env.cooled_objects]
 
+        gc_all += ["object_in_receptacle", "object_cooled", "cooled_object_in_receptacle"]
+
         # check if object is in the receptacle
         if len(objs_in_place) > 0:
             s += 1
+            gc_met += ["object_in_receptacle"]
         # check if some object was cooled
         if len(objs_cooled) > 0:
             s += 1
+            gc_met += ["object_cooled"]
         # check if the object is both in the receptacle and cold
         if np.any([obj_id in objs_cooled for obj_id in objs_in_place]):
             s += 1
+            gc_met += ["cooled_object_in_receptacle"]
 
         return s, ts
 
@@ -389,10 +432,17 @@ class PickCleanThenPlaceInRecepTask(BaseTask):
         receptacles = get_objects_with_name_and_prop(targets['parent'], 'receptacle', state.metadata)
         pickupables = get_objects_with_name_and_prop(targets['object'], 'pickupable', state.metadata)
 
+        gc_all = []
+        gc_met = []
+
         if 'Sliced' in targets['object']:
             ts += 1
+            gc_all += ["object_sliced"]
             if len([p for p in pickupables if 'Sliced' in p['objectId']]) >= 1:
                 s += 1
+                gc_met += ["object_sliced"]
+
+        gc_all += ["object_in_receptacle", "object_cleaned", "cleaned_object_in_receptacle"]
 
         objs_in_place = [p['objectId'] for p in pickupables for r in receptacles
                          if r['receptacleObjectIds'] is not None and p['objectId'] in r['receptacleObjectIds']]
@@ -401,12 +451,15 @@ class PickCleanThenPlaceInRecepTask(BaseTask):
         # check if object is in the receptacle
         if len(objs_in_place) > 0:
             s += 1
+            gc_met += ["object_in_receptacle"]
         # check if some object was cleaned
         if len(objs_cleaned) > 0:
             s += 1
+            gc_met += ["object_cleaned"]
         # check if the object is both in the receptacle and clean
         if np.any([obj_id in objs_cleaned for obj_id in objs_in_place]):
             s += 1
+            gc_met += ["cleaned_object_in_receptacle"]
 
         return s, ts
 
@@ -436,11 +489,16 @@ class PickAndPlaceWithMovableRecepTask(BaseTask):
         pickupables = get_objects_with_name_and_prop(targets['object'], 'pickupable', state.metadata)
         movables = get_objects_with_name_and_prop(targets['mrecep'], 'pickupable', state.metadata)
 
+        gc_all = []
+        gc_met = []
+
         # check if object needs to be sliced
         if 'Sliced' in targets['object']:
             ts += 1
+            gc_all += ["object_sliced"]
             if len([p for p in pickupables if 'Sliced' in p['objectId']]) >= 1:
                 s += 1
+                gc_met += ["object_sliced"]
 
         pickup_in_place = [p for p in pickupables for m in movables
                            if 'receptacleObjectIds' in p and m['receptacleObjectIds'] is not None
@@ -448,17 +506,23 @@ class PickAndPlaceWithMovableRecepTask(BaseTask):
         movable_in_place = [m for m in movables for r in receptacles
                             if 'receptacleObjectIds' in r and r['receptacleObjectIds'] is not None
                             and m['objectId'] in r['receptacleObjectIds']]
+
+        gc_all += ["object_in_receptacle", "movable_in_receptacle", "object_and_movable_in_receptacle"]
+
         # check if the object is in the final receptacle
         if len(pickup_in_place) > 0:
             s += 1
+            gc_met += ["object_in_receptacle"]
         # check if the movable receptacle is in the final receptacle
         if len(movable_in_place) > 0:
             s += 1
+            gc_met += ["movable_in_receptacle"]
         # check if both the object and movable receptacle stack is in the final receptacle
         if np.any([np.any([p['objectId'] in m['receptacleObjectIds'] for p in pickupables]) and
                    np.any([r['objectId'] in m['parentReceptacles'] for r in receptacles]) for m in movables
                    if m['parentReceptacles'] is not None and m['receptacleObjectIds'] is not None]):
             s += 1
+            gc_met += ["object_and_movable_in_receptacle"]
 
         return s, ts
 
