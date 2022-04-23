@@ -37,4 +37,4 @@ RUN wget \
     && printf "PATH='/root/miniconda3/bin:$PATH'" >> ${WORKDIR}/.bashrc \
     && conda init
 
-ENTRYPOINT bash -c "export ALFRED_ROOT=~/alfred && PATH="/root/miniconda3/bin:$PATH" >> ~/.bashrc && conda init && /bin/bash"
+ENTRYPOINT bash -c "export ALFRED_ROOT=~/alfred && PATH="/root/miniconda3/bin:$PATH" && conda init && /bin/bash && echo -e "# ~/.screenrc\nshell -/bin/bash" >> ~/.screenrc"

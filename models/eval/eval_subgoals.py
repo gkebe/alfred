@@ -69,10 +69,11 @@ class EvalSubgoals(Eval):
 
         # subgoal info
         subgoal_action = traj_data['plan']['high_pddl'][eval_idx]['discrete_action']['action']
-        subgoal_instr = traj_data['turk_annotations']['anns'][r_idx]['high_descs'][eval_idx]
+        # subgoal_instr = traj_data['turk_annotations']['anns'][r_idx]['high_descs'][eval_idx]
 
         # print subgoal info
-        print("Evaluating: %s\nSubgoal %s (%d)\nInstr: %s" % (traj_data['root'], subgoal_action, eval_idx, subgoal_instr))
+        # print("Evaluating: %s\nSubgoal %s (%d)\nInstr: %s" % (traj_data['root'], subgoal_action, eval_idx, subgoal_instr))
+        print("Evaluating: %s\nSubgoal %s (%d)" % (traj_data['root'], subgoal_action, eval_idx))
 
         # extract language features
         feat = model.featurize([traj_data], load_mask=False)
@@ -184,7 +185,7 @@ class EvalSubgoals(Eval):
                      'repeat_idx': int(r_idx),
                      'subgoal_idx': int(eval_idx),
                      'subgoal_type': subgoal_action,
-                     'subgoal_instr': subgoal_instr,
+                     #'subgoal_instr': subgoal_instr,
                      'subgoal_success_spl': float(s_spl),
                      'subgoal_path_len_weighted_success_spl': float(plw_s_spl),
                      'subgoal_path_len_weight': float(expert_pl),
