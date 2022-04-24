@@ -27,7 +27,7 @@ with open(args.in_file) as src_file:
         for original_split in ["train", "valid_seen", "valid_unseen", "test_seen", "test_unseen"]:
             print(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json"))
             if os.path.exists(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json")):
-                with open(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json")) as f:
+                with open(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json"), "r") as f:
                     traj_data = json.loads(f)
         scene = traj_data["scene"]
         print(tmp_dict['task'])
