@@ -21,14 +21,14 @@ for original_split in ["train", "valid_seen", "valid_unseen"]:
             with open(os.path.join(alfred_data_dir, original_split, task, trial, "traj_data.json"), "r") as f:
                 traj_data = json.loads(f.read())
                 scene = traj_data["scene"]["floor_plan"]
-                task_dict[os.path.join(original_split, task, trial)] = scene
+                task_dict[os.path.join(task, trial)] = scene
 
 for original_split in ["tests_seen", "tests_unseen"]:
     for trial in os.listdir(os.path.join(args.alfred_data_dir, original_split)):
         with open(os.path.join(alfred_data_dir, original_split, trial, "traj_data.json"), "r") as f:
             traj_data = json.loads(f.read())
             scene = traj_data["scene"]["floor_plan"]
-            task_dict[os.path.join(original_split, trial)] = scene
+            task_dict[os.path.join(trial)] = scene
 
 with open(args.out_file, "w") as target:
     json.dump(task_dict, target, indent = 4)
