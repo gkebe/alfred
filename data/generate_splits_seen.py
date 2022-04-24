@@ -23,7 +23,7 @@ with open(args.in_file) as src_file:
     for line in src_file:
         tmp_dict = json.loads(line)
         fmtd_task = tmp_dict['task'][:tmp_dict['task'][:(tmp_dict['task'].rfind('-'))].rfind('-')]
-        tmp = fmtd_task.replace("_trial", "/trial")
+        fmtd_task = fmtd_task.replace("_trial", "/trial")
         for original_split in ["train", "valid_seen", "valid_unseen", "test_seen", "test_unseen"]:
             print(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json"))
             if os.path.exists(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json")):
