@@ -25,3 +25,4 @@ for original_split in ["train", "valid_seen", "valid_unseen", "test_seen", "test
             with open(os.path.join(alfred_data_dir, original_split, task, trial, "traj_data.json"), "r") as f:
                 traj_data = json.loads(f.read())
                 scene = traj_data["scene"]
+                print(scene)
