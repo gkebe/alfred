@@ -28,7 +28,7 @@ with open(args.in_file) as src_file:
             print(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json"))
             if os.path.exists(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json")):
                 with open(os.path.join(alfred_data_dir, original_split, fmtd_task, "traj_data.json"), "r") as f:
-                    traj_data = json.loads(f)
+                    traj_data = json.loads(f.read())
         scene = traj_data["scene"]
         print(tmp_dict['task'])
         print(scene)
