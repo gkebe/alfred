@@ -17,6 +17,7 @@ parent_dict = {}
 task_list = []
 task_dict = {}
 
+alfred_data_dir = args.alfred_data_dir
 #Open input file and reformat data into {idx, task}
 with open(args.in_file) as src_file:
     for line in src_file:
