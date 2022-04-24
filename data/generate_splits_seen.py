@@ -25,12 +25,9 @@ for original_split in ["train", "valid_seen", "valid_unseen"]:
             with open(os.path.join(alfred_data_dir, original_split, task, trial, "traj_data.json"), "r") as f:
                 traj_data = json.loads(f.read())
                 scene = traj_data["scene"]["floor_plan"]
-                print(scene)
 
 for original_split in ["test_seen", "test_unseen"]:
-    for task in os.listdir(os.path.join(args.alfred_data_dir, original_split)):
-        for trial in os.listdir(os.path.join(args.alfred_data_dir, original_split, task)):
-            with open(os.path.join(alfred_data_dir, original_split, task, trial, "traj_data.json"), "r") as f:
-                traj_data = json.loads(f.read())
-                scene = traj_data["scene"]["floor_plan"]
-                print(scene)
+    for trial in os.listdir(os.path.join(args.alfred_data_dir, original_split)):
+        with open(os.path.join(alfred_data_dir, original_split, trial, "traj_data.json"), "r") as f:
+            traj_data = json.loads(f.read())
+            scene = traj_data["scene"]["floor_plan"]
