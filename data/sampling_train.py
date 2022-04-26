@@ -13,7 +13,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--splits_json', type=str, help='json file with train/val/test splits', required=True)
-parser.add_argument('--sample_percent', type=float, help='A number between 0.0 and 1.0')
+parser.add_argument('--sample_percent', type=int, help='A number between 0.0 and 1.0')
 parser.add_argument('--output', type=str, help='output json file with new train/val/test splits', required=True)
 parser.add_argument('--seed', type=float, help='A float to seed the shuffle. Default is 0.5',
                     default=0.5)
