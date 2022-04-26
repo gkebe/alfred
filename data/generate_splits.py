@@ -4,6 +4,8 @@ import argparse
 import sys
 import os
 
+# Update this code to take scene into account instead of task
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--in_file', type=str, help='a jsonl file of completed task annotations')
 parser.add_argument('--tests_percent', type=float, help='A number between 0.0 and 1.0')
