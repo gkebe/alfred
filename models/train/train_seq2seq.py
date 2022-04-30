@@ -38,6 +38,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch', help='batch size', default=8, type=int)
     parser.add_argument('--epoch', help='number of epochs', default=20, type=int)
     parser.add_argument('--lr', help='optimizer learning rate', default=1e-4, type=float)
+    parser.add_argument('--dec_lr', help='optimizer learning rate for decoder only', default=1e-4, type=float)
     parser.add_argument('--decay_epoch', help='num epoch to adjust learning rate', default=10, type=int)
     parser.add_argument('--dhid', help='hidden layer size', default=512, type=int)
     parser.add_argument('--dframe', help='image feature vec size', default=2500, type=int)
@@ -114,8 +115,12 @@ if __name__ == '__main__':
         dec_params = list(filter(lambda kv: kv[0] in dec_list, model.named_parameters()))
 
         print(dec_list)
-        torch.optim.Adam(self.parameters(), lr=args.lr)
-        sys.exit()
+
+        optimizer = torch.optim.Adam(
+            [{"params": enc_params},
+             {"params": dec_params, "lr": args.dec_lr}
+             ],
+            lr=args.lr)
     else:
         model = M.Module(args, vocab)
         optimizer = None
