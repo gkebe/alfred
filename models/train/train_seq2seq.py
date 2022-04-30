@@ -117,8 +117,8 @@ if __name__ == '__main__':
         print(dec_list)
 
         optimizer = torch.optim.Adam(
-            [{"params": enc_params},
-             {"params": dec_params, "lr": args.dec_lr}
+            [{"params": [i[1] for i in enc_params]},
+             {"params": [i[1] for i in dec_params], "lr": args.dec_lr}
              ],
             lr=args.lr)
     else:
