@@ -114,8 +114,6 @@ if __name__ == '__main__':
         enc_params = list(filter(lambda kv: kv[0] not in dec_list, model.named_parameters()))
         dec_params = list(filter(lambda kv: kv[0] in dec_list, model.named_parameters()))
 
-        print(dec_list)
-
         optimizer = torch.optim.Adam(
             [{"params": [i[1] for i in enc_params]},
              {"params": [i[1] for i in dec_params], "lr": args.dec_lr}
