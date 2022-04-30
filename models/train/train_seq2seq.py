@@ -104,6 +104,8 @@ if __name__ == '__main__':
         pretrained_model, _ = M.Module.load(args.non_lang_weights)
         model = M.Module(args, vocab)
         optimizer = None
+
+        print(pretrained_model.named_parameters())
         sys.exit()
     else:
         model = M.Module(args, vocab)
