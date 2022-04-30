@@ -111,8 +111,8 @@ if __name__ == '__main__':
         pretrained_weights = pretrained_model.state_dict()
 
         new_weights = model.state_dict()
-
-        print([f"{i}: {pretrained_weights[i] == new_weights[i]}" for i in pretrained_weights])
+        for i in pretrained_weights:
+            print(f"{i}: {pretrained_weights[i] == new_weights[i]}")
 
         sys.exit()
     else:
