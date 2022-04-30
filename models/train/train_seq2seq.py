@@ -105,7 +105,7 @@ if __name__ == '__main__':
         model = M.Module(args, vocab)
         optimizer = None
 
-        print(pretrained_model.named_parameters())
+        print(list(pretrained_model.named_parameters()))
         sys.exit()
     else:
         model = M.Module(args, vocab)
