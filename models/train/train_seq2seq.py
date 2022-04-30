@@ -105,10 +105,11 @@ if __name__ == '__main__':
         model = M.Module(args, vocab)
         optimizer = None
 
-        enc_weights = [i for i in pretrained_model.enc.named_parameters()]
-        dec_weights = [i for i in pretrained_model.dec.named_parameters()]
-        print([i[0] for i in enc_weights])
-        print()
+        model.dec.load_state_dict(pretrained_model.dec.state_dict())
+        model.emb_action_low.load_state_dict(pretrained_model.emb_action_low.state_dict())
+
+        dec_weights = [i for i in pretrained_model.dec.named_parameters() + pretrained_model.emb_action_low.state_dict()]
+
         print([i[0] for i in dec_weights])
         sys.exit()
     else:
