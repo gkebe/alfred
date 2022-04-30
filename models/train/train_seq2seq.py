@@ -108,19 +108,6 @@ if __name__ == '__main__':
         model.dec.load_state_dict(pretrained_model.dec.state_dict())
         model.emb_action_low.load_state_dict(pretrained_model.emb_action_low.state_dict())
 
-        pretrained_weights = pretrained_model.state_dict()
-
-        new_weights = model.state_dict()
-        for i in pretrained_weights:
-            print(f"{i}")
-            if len(pretrained_weights[i].size()) == 0:
-                print("Not Tensor")
-            elif pretrained_weights[i].size()[0] == new_weights[i].size()[0]:
-                print(f"{pretrained_weights[i] == new_weights[i]}")
-            else:
-                print("False")
-
-        sys.exit()
     else:
         model = M.Module(args, vocab)
         optimizer = None
