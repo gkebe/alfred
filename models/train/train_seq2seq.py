@@ -108,7 +108,7 @@ if __name__ == '__main__':
         model.dec.load_state_dict(pretrained_model.dec.state_dict())
         model.emb_action_low.load_state_dict(pretrained_model.emb_action_low.state_dict())
 
-        dec_weights = [i for i in pretrained_model.dec.named_parameters() + pretrained_model.emb_action_low.state_dict()]
+        dec_weights = [i for i in pretrained_model.dec.named_parameters() + pretrained_model.emb_action_low.named_parameters()]
 
         print([i[0] for i in dec_weights])
         sys.exit()
