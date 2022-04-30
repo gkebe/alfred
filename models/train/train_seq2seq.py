@@ -98,6 +98,12 @@ if __name__ == '__main__':
     if args.resume:
         print("Loading: " + args.resume)
         model, optimizer = M.Module.load(args.resume)
+    elif args.pretrained_nav:
+        print("Loading: " + args.pretrained_nav)
+        pretrained_model, _ = M.Module.load(args.pretrained_nav)
+        model = M.Module(args, vocab)
+        optimizer = None
+        sys.exit
     else:
         model = M.Module(args, vocab)
         optimizer = None
