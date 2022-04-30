@@ -105,8 +105,8 @@ if __name__ == '__main__':
         model = M.Module(args, vocab)
         optimizer = None
 
-        enc_weights = [i for i in pretrained_model.named_parameters() if "enc" in i[0]]
-        dec_weights = [i for i in pretrained_model.named_parameters() if "enc" not in i[0]]
+        enc_weights = [i for i in pretrained_model.enc.named_parameters()]
+        dec_weights = [i for i in pretrained_model.dec.named_parameters()]
         print([i[0] for i in enc_weights])
         print()
         print([i[0] for i in dec_weights])
