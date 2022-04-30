@@ -105,7 +105,11 @@ if __name__ == '__main__':
         model = M.Module(args, vocab)
         optimizer = None
 
-        print([i[0] for i in pretrained_model.named_parameters()])
+        enc_weights = [i for i in pretrained_model.named_parameters() if "enc" in i[0]]
+        dec_weights = [i for i in pretrained_model.named_parameters() if "enc" not in i[0]]
+        print([i[0] for i in enc_weights.named_parameters()])
+        print()
+        print([i[0] for i in dec_weights.named_parameters()])
         sys.exit()
     else:
         model = M.Module(args, vocab)
