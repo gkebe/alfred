@@ -99,7 +99,7 @@ if __name__ == '__main__':
     if args.resume:
         print("Loading: " + args.resume)
         model, optimizer = M.Module.load(args.resume)
-    elif args.non_lang_weights:
+    elif args.load_dec_weights:
         print("Loading decoder weights from: " + args.load_dec_weights)
         pretrained_model, _ = M.Module.load(args.load_dec_weights)
         model = M.Module(args, vocab)
