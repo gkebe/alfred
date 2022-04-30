@@ -103,11 +103,19 @@ if __name__ == '__main__':
         print("Loading decoder weights from: " + args.load_dec_weights)
         pretrained_model, _ = M.Module.load(args.load_dec_weights)
         model = M.Module(args, vocab)
-        optimizer = None
 
         model.dec.load_state_dict(pretrained_model.dec.state_dict())
         model.emb_action_low.load_state_dict(pretrained_model.emb_action_low.state_dict())
 
+        dec_list = [f"dec.{i}" for i in pretrained_model.dec.state_dict()] + \
+                   [f"emb_action_low.{i}" for i in pretrained_model.emb_action_low.state_dict()]
+
+        enc_params = list(filter(lambda kv: kv[0] not in dec_list, model.named_parameters()))
+        dec_params = list(filter(lambda kv: kv[0] in dec_list, model.named_parameters()))
+
+        print(dec_list)
+        torch.optim.Adam(self.parameters(), lr=args.lr)
+        sys.exit()
     else:
         model = M.Module(args, vocab)
         optimizer = None
