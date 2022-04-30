@@ -132,6 +132,7 @@ class Module(nn.Module):
             self.summary_writer.add_scalar('valid_unseen/total_loss', m_valid_unseen['total_loss'], valid_unseen_iter)
 
             stats = {'epoch': epoch,
+                     'training_loss': sum(total_train_loss) / len(total_train_loss),
                      'valid_seen': m_valid_seen,
                      'valid_unseen': m_valid_unseen}
 
