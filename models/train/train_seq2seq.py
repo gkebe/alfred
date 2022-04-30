@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_templated_goals', help='use templated goals instead of human-annotated goal descriptions (only available for train set)', action='store_true')
     parser.add_argument('--resume', help='load a checkpoint')
 
-    parser.add_argument('--non_lang_weights', help='load non-language weights from another model')
+    parser.add_argument('--load_dec_weights', help='load decoder weights from another model')
     parser.add_argument('--pretrained_model', help='pretrained language model to use in seq2seq_pretrained_mask', default='bert')
     parser.add_argument('--no_alignment', help='ignores alignment between step-by-step language and action sequence segments', action='store_true')
 
@@ -100,8 +100,8 @@ if __name__ == '__main__':
         print("Loading: " + args.resume)
         model, optimizer = M.Module.load(args.resume)
     elif args.non_lang_weights:
-        print("Loading non-language weights from: " + args.non_lang_weights)
-        pretrained_model, _ = M.Module.load(args.non_lang_weights)
+        print("Loading decoder weights from: " + args.load_dec_weights)
+        pretrained_model, _ = M.Module.load(args.load_dec_weights)
         model = M.Module(args, vocab)
         optimizer = None
 
