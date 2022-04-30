@@ -102,7 +102,12 @@ if __name__ == '__main__':
         model, optimizer = M.Module.load(args.resume)
     elif args.load_dec_weights:
         print("Loading decoder weights from: " + args.load_dec_weights)
-        pretrained_model, _ = M.Module.load(args.load_dec_weights)
+
+        with open("/".join(args.load_dec_weights.split("/")[:-1])+"/config.json", 'r') as config_file:
+            pretrained_M_name = json.load(config_file)["model"]
+            pretrained_M = import_module('model.{}'.format(pretrained_M_name))
+        pretrained_model, _ = pretrained_M.Module.load(args.load_dec_weights)
+
         model = M.Module(args, vocab)
 
         model.dec.load_state_dict(pretrained_model.dec.state_dict())
