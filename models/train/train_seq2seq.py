@@ -115,7 +115,7 @@ if __name__ == '__main__':
             print(f"{i}")
             if not torch.is_tensor(pretrained_weights[i]):
                 print("Not Tensor")
-            elif pretrained_weights[i].size[0] == new_weights[i].size[0]:
+            elif pretrained_weights[i].size()[0] == new_weights[i].size()[0]:
                 print(f"{pretrained_weights[i] == new_weights[i]}")
             else:
                 print("False")
