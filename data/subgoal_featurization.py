@@ -39,6 +39,27 @@ features = {}
 with open(args.splits_json, 'r') as json_file:
     splits_dict = json.loads(json_file.read())
 
+options = {}
+
+for split, ann_list in tqdm(splits_dict.items()):
+    if "test" in split:
+        continue
+    for ann in tqdm(ann_list):
+        if ann["task"] in features:
+            continue
+        with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_0.json"), 'r') as ann_file:
+            ann_json = json.loads(ann_file.read())
+            pddl_plan = ann_json["plan"]["high_pddl"]
+        for step in pddl_plan:
+            action = step["discrete_action"]["action"]
+            if action not in options:
+                options[action] = {}
+            for i, subgoal_arg in enumerate(step["discrete_action"]["args"]):
+                if i not in options[action]:
+                    options[action][i] = []
+                if subgoal_arg not in options[action][i]:
+                    options[action][i].append(subgoal_arg)
+
 for split, ann_list in tqdm(splits_dict.items()):
     if "test" in split:
         continue
@@ -50,11 +71,39 @@ for split, ann_list in tqdm(splits_dict.items()):
             pddl_plan = ann_json["plan"]["high_pddl"]
         subgoal_features = {}
         for step in pddl_plan:
-            subgoal_utterance = step["discrete_action"]["action"]
-            for subgoal_arg in step["discrete_action"]["args"]:
-                subgoal_utterance += f" {subgoal_arg}"
-            subgoal_features[step["high_idx"]] = proc_subgoal(subgoal_utterance)
-        features[ann['task']] =subgoal_features
+            subgoal_pos= step["discrete_action"]["action"]
+            same = False
+            if random.choice([0]*3 + [1]) == 1:
+                subgoal_neg = step["discrete_action"]["action"]
+                same = True
+            else:
+                action_options = list(options.keys())
+                action_options.remove(subgoal_pos)
+                subgoal_neg = random.choice(action_options)
+
+            chosen_action = subgoal_neg
+            chosen_num_args = max(list(options[choosen_action].keys()))
+            for i, subgoal_arg in emunerate(step["discrete_action"]["args"]):
+                subgoal_pos += f" {subgoal_arg}"
+                if i not in options[choosen_action]:
+                    continue
+                arg_options = options[subgoal_negative][i]
+                if subgoal_arg in arg_options:
+                    if not (same and i == chosen_num_args - 1) and random.choice([0] * 3 + [1]) == 1:
+                        arg_options = [subgoal_arg]
+                    else:
+                        same = False
+                        arg_options.remove(subgoal_arg)
+
+                subgoal_neg += f" {random.choice(arg_options)}"
+
+            print(f"Pos: {subgoal_pos}")
+            print(f"Neg: {subgoal_neg}")
+            print()
+            #subgoal_features[step["high_idx"]] = {"pos": proc_subgoal(subgoal_pos),
+                                                  #"neg": proc_subgoal(subgoal_neg)}
+        #features[ann['task']] =subgoal_features
+
 
 
 with open(os.path.join(args.data_dir, "subgoal_features.pkl"), 'wb') as f:
