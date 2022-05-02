@@ -8,6 +8,7 @@ import numpy as np
 from torch import nn
 from tensorboardX import SummaryWriter
 from tqdm import trange
+import pickle
 
 class Module(nn.Module):
 
@@ -24,6 +25,9 @@ class Module(nn.Module):
         # args and vocab
         self.args = args
         self.vocab = vocab
+
+        if args.subgoal_embedding:
+            self.subgoal_features = pickle.load(open(os.path.join(args.data, "subgoal_features.pkl"), "rb"))
 
         # emb modules
         self.emb_word = nn.Embedding(len(vocab['word']), args.demb)
