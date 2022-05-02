@@ -154,7 +154,7 @@ class ConvFrameMaskDecoder(nn.Module):
         action_t = action_emb_t.mm(self.emb.weight.t())
         mask_t = self.mask_dec(cont_t)
 
-        return action_t, mask_t, state_t, lang_attn_t
+        return action_t, mask_t, state_t, lang_attn_t, weighted_lang_t
 
     def forward(self, enc, frames, gold=None, max_decode=150, state_0=None):
         max_t = gold.size(1) if self.training else min(max_decode, frames.shape[1])
@@ -165,11 +165,13 @@ class ConvFrameMaskDecoder(nn.Module):
         actions = []
         masks = []
         attn_scores = []
+        weighted_attn = []
         for t in range(max_t):
-            action_t, mask_t, state_t, attn_score_t = self.step(enc, frames[:, t], e_t, state_t)
+            action_t, mask_t, state_t, attn_score_t, weighted_lang_t = self.step(enc, frames[:, t], e_t, state_t)
             masks.append(mask_t)
             actions.append(action_t)
             attn_scores.append(attn_score_t)
+            weighted_attn.append(weighted_lang_t)
             if self.teacher_forcing and self.training:
                 w_t = gold[:, t]
             else:
@@ -180,6 +182,7 @@ class ConvFrameMaskDecoder(nn.Module):
             'out_action_low': torch.stack(actions, dim=1),
             'out_action_low_mask': torch.stack(masks, dim=1),
             'out_attn_scores': torch.stack(attn_scores, dim=1),
+            'out_weighted_lang': torch.stack(weighted_attn, dim=1),
             'state_t': state_t
         }
         return results

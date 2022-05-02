@@ -89,12 +89,12 @@ class Module(Base):
 
                 # subgoal embedding
                 if self.args.subgoal_embedding:
-                    feat['subgoal_pos'].append(
-                        torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["pos"],
-                                     device=device))
-                    feat['subgoal_neg'].append(
-                        torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["neg"],
-                                     device=device))
+                    feat['subgoal_pos'].append(torch.stack(
+                        [torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["pos"],
+                                      device=device) for i in subgoal_idx]))
+                    feat['subgoal_neg'].append(torch.stack(
+                        [torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["neg"],
+                                      device=device) for i in subgoal_idx]))
 
             #########
             # inputs
@@ -202,7 +202,6 @@ class Module(Base):
 
     def forward(self, feat, max_decode=300):
         cont_lang, enc_lang = self.encode_lang(feat)
-        feat.update({"lang_anchor": cont_lang})
         state_0 = cont_lang, torch.zeros_like(cont_lang)
         frames = self.vis_dropout(feat['frames'])
         res = self.dec(enc_lang, frames, max_decode=max_decode, gold=feat['action_low'], state_0=state_0)
@@ -356,7 +355,7 @@ class Module(Base):
 
         # subgoal triplet loss
         if self.args.subgoal_embedding:
-            anchor_lang = feat['lang_anchor']
+            anchor_lang = out['out_weighted_lang']
             pos_subgoal = feat['subgoal_pos']
             neg_subgoal = feat['subgoal_neg']
             losses['triplet_loss'] = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
