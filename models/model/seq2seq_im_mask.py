@@ -85,8 +85,8 @@ class Module(Base):
 
                 # subgoal embedding
                 if self.args.subgoal_embedding:
-                    feat['subgoal_pos'].append(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["pos"])
-                    feat['subgoal_neg'].append(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["neg"])
+                    feat['subgoal_pos'].append(torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["pos"], device=device))
+                    feat['subgoal_neg'].append(torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["neg"], device=device))
 
             #########
             # inputs
