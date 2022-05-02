@@ -106,12 +106,9 @@ for split, ann_list in tqdm(splits_dict.items()):
                     subgoal_neg = "NoOp"
 
 
-            print(f"Pos: {subgoal_pos}")
-            print(f"Neg: {subgoal_neg}")
-            print()
-            #subgoal_features[step["high_idx"]] = {"pos": proc_subgoal(subgoal_pos),
-                                                  #"neg": proc_subgoal(subgoal_neg)}
-        #features[ann['task']] =subgoal_features
+            subgoal_features[step["high_idx"]] = {"pos": proc_subgoal(subgoal_pos),
+                                                  "neg": proc_subgoal(subgoal_neg)}
+        features[ann['task']] =subgoal_features
 
 
 
