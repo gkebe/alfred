@@ -332,11 +332,11 @@ class Module(nn.Module):
 
             optimizer = torch.optim.Adam(
                 [{"params": [i[1] for i in enc_params]},
-                 {"params": [i[1] for i in dec_params], "lr": args.dec_lr}
+                 {"params": [i[1] for i in dec_params], "lr": model.args.dec_lr}
                  ],
-                lr=args.lr)
+                lr=model.args.lr)
         else:
-            optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+            optimizer = torch.optim.Adam(model.parameters(), lr=model.args.lr)
         optimizer.load_state_dict(save['optim'])
         return model, optimizer
 
