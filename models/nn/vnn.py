@@ -139,6 +139,7 @@ class ConvFrameMaskDecoder(nn.Module):
         # attend over language
         weighted_lang_t, lang_attn_t = self.attn(self.attn_dropout(lang_feat_t), self.h_tm1_fc(h_tm1))
 
+        print(weighted_lang_t)
         # concat visual feats, weight lang, and previous action embedding
         inp_t = torch.cat([vis_feat_t, weighted_lang_t, e_t], dim=1)
         inp_t = self.input_dropout(inp_t)
