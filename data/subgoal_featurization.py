@@ -41,7 +41,7 @@ with open(args.splits_json, 'r') as json_file:
 
 options = {}
 
-for split, ann_list in tqdm(splits_dict.items()):
+for split, ann_list in splits_dict.items():
     if "test" in split:
         continue
     for ann in tqdm(ann_list):
