@@ -100,9 +100,11 @@ for split, ann_list in tqdm(splits_dict.items()):
                     else:
                         same = False
                         arg_options.remove(subgoal_arg)
-                subgoal_neg = "NoOp"
                 if len(arg_options):
                     subgoal_neg += f" {random.choice(arg_options)}"
+                else:
+                    subgoal_neg = "NoOp"
+
 
             print(f"Pos: {subgoal_pos}")
             print(f"Neg: {subgoal_neg}")
