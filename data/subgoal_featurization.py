@@ -29,6 +29,7 @@ args = parser.parse_args()
 random.seed(args.seed)
 document_embeddings = flair.embeddings.DocumentPoolEmbeddings([flair.embeddings.BertEmbeddings()])
 
+
 def proc_subgoal(t):
     t = t.strip()
     if not t:
@@ -37,18 +38,18 @@ def proc_subgoal(t):
     sembeddings = model.encode(t)
     return sembeddings
 
-features = {}
 
 # Opening JSON file with splits
 with open(args.splits_json, 'r') as json_file:
     splits_dict = json.loads(json_file.read())
 
 options = {}
-
-for split, ann_list in splits_dict.items():
+subgoal_id = {}
+subgoal_embeddings = {}
+for split, ann_list in tqdm(splits_dict.items()):
     if "test" in split:
         continue
-    for ann in ann_list:
+    for ann in tqdm(ann_list):
         if ann["task"] in features:
             continue
         with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_0.json"), 'r') as ann_file:
@@ -58,12 +59,20 @@ for split, ann_list in splits_dict.items():
             action = step["discrete_action"]["action"]
             if action not in options:
                 options[action] = {}
+            args = ""
             for i, subgoal_arg in enumerate(step["discrete_action"]["args"]):
                 if i not in options[action]:
                     options[action][i] = []
                 if subgoal_arg not in options[action][i]:
                     options[action][i].append(subgoal_arg)
+                args += f" {subgoal_arg}"
 
+            subgoal_name = action + args
+            if subgoal_name not in subgoal_id:
+                i = step["high_idx"]
+                subgoal_id[subgoal_name] = int(str(ann["num"]["action_high"][i]["action"]) + "".join([str(j) for j in ex["num"]["action_high"][i]["action_args"]]))
+                subgoal_embeddings[subgoal_id[subgoal_name]] = proc_subgoal(subgoal_name)
+features = {"subgoal_id":subgoal_id, "subgoal_embeddings":subgoal_embeddings}
 for split, ann_list in tqdm(splits_dict.items()):
     if "test" in split:
         continue
@@ -106,11 +115,12 @@ for split, ann_list in tqdm(splits_dict.items()):
                     subgoal_neg = "NoOp"
 
 
-            subgoal_features[step["high_idx"]] = {"pos": proc_subgoal(subgoal_pos),
-                                                  "neg": proc_subgoal(subgoal_neg)}
+            subgoal_features[step["high_idx"]] = {"pos": subgoal_id[subgoal_pos],
+                                                  "neg": subgoal_id[subgoal_neg]}
         features[ann['task']] =subgoal_features
 
 
 
-with open(os.path.join(args.data_dir, "subgoal_features.pkl"), 'wb') as f:
+
+with open(os.path.join(args.data_dir, "subgoal_features_.pkl"), 'wb') as f:
     pickle.dump(features, f)
