@@ -87,9 +87,9 @@ class Module(Base):
                 if self.args.subgoal_embedding:
                     subgoal_idx = ex['num']['low_to_high_idx']
                     feat['subgoal_pos'].append(torch.stack([torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["pos"],
-                                                             device=device) for i in subgoal_idx]))
+                                                             device=device, dtype=torch.float) for i in subgoal_idx]))
                     feat['subgoal_neg'].append(torch.stack([torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["neg"],
-                                                             device=device) for i in subgoal_idx]))
+                                                             device=device, dtype=torch.float) for i in subgoal_idx]))
 
             #########
             # inputs
