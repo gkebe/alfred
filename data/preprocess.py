@@ -42,7 +42,7 @@ class Dataset(object):
         '''
         for k, d in splits.items():
             print('Preprocessing {}'.format(k))
-            train_mode = 'test' not in k and not freeze_vocab
+            train_mode = 'test' not in k
 
             # debugging:
             if self.args.fast_epoch:
@@ -66,7 +66,7 @@ class Dataset(object):
 
                 # numericalize language
                 use_templated_goals = self.args.use_templated_goals and train_mode # templated goals are not available for the test set
-                self.process_language(ex, traj, r_idx, use_templated_goals=use_templated_goals)
+                self.process_language(ex, traj, r_idx, use_templated_goals=use_templated_goals, freeze_vocab=freeze_vocab)
 
                 # numericalize actions for train/valid splits
                 if train_mode: # expert actions are not available for the test set
@@ -91,7 +91,7 @@ class Dataset(object):
         torch.save(self.vocab, vocab_data_path)
 
 
-    def process_language(self, ex, traj, r_idx, use_templated_goals=False):
+    def process_language(self, ex, traj, r_idx, use_templated_goals=False, freeze_vocab=False):
         # goal instruction
         if use_templated_goals:
             task_desc = sample_templated_task_desc_from_traj_data(traj)
@@ -114,9 +114,9 @@ class Dataset(object):
 
         # numericalize language
         traj['num'] = {}
-        traj['num']['lang_goal'] = self.numericalize(self.vocab['word'], traj['ann']['goal'], train=True)
-        traj['num']['lang_intent'] = self.numericalize(self.vocab['word'], traj['ann']['intent'], train=True)
-        traj['num']['lang_instr'] = [self.numericalize(self.vocab['word'], x, train=True) for x in traj['ann']['instr']]
+        traj['num']['lang_goal'] = self.numericalize(self.vocab['word'], traj['ann']['goal'], train=not freeze_vocab)
+        traj['num']['lang_intent'] = self.numericalize(self.vocab['word'], traj['ann']['intent'], train=not freeze_vocab)
+        traj['num']['lang_instr'] = [self.numericalize(self.vocab['word'], x, not freeze_vocab) for x in traj['ann']['instr']]
 
 
     def process_actions(self, ex, traj):
