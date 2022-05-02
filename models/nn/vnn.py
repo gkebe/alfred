@@ -139,7 +139,6 @@ class ConvFrameMaskDecoder(nn.Module):
         # attend over language
         weighted_lang_t, lang_attn_t = self.attn(self.attn_dropout(lang_feat_t), self.h_tm1_fc(h_tm1))
 
-        print(weighted_lang_t)
         # concat visual feats, weight lang, and previous action embedding
         inp_t = torch.cat([vis_feat_t, weighted_lang_t, e_t], dim=1)
         inp_t = self.input_dropout(inp_t)
@@ -178,7 +177,7 @@ class ConvFrameMaskDecoder(nn.Module):
             else:
                 w_t = action_t.max(1)[1]
             e_t = self.emb(w_t)
-        print(torch.stack(weighted_attn, dim=1))
+
         results = {
             'out_action_low': torch.stack(actions, dim=1),
             'out_action_low_mask': torch.stack(masks, dim=1),
@@ -251,7 +250,7 @@ class ConvFrameMaskDecoderProgressMonitor(nn.Module):
         subgoal_t = F.sigmoid(self.subgoal(cont_t))
         progress_t = F.sigmoid(self.progress(cont_t))
 
-        return action_t, mask_t, state_t, lang_attn_t, subgoal_t, progress_t
+        return action_t, mask_t, state_t, lang_attn_t, subgoal_t, progress_t, weighted_lang_t
 
     def forward(self, enc, frames, gold=None, max_decode=150, state_0=None):
         max_t = gold.size(1) if self.training else min(max_decode, frames.shape[1])
@@ -264,14 +263,15 @@ class ConvFrameMaskDecoderProgressMonitor(nn.Module):
         attn_scores = []
         subgoals = []
         progresses = []
+        weighted_attn = []
         for t in range(max_t):
-            action_t, mask_t, state_t, attn_score_t, subgoal_t, progress_t = self.step(enc, frames[:, t], e_t, state_t)
+            action_t, mask_t, state_t, attn_score_t, subgoal_t, progress_t, weighted_lang_t  = self.step(enc, frames[:, t], e_t, state_t)
             masks.append(mask_t)
             actions.append(action_t)
             attn_scores.append(attn_score_t)
             subgoals.append(subgoal_t)
             progresses.append(progress_t)
-
+            weighted_attn.append(weighted_lang_t)
             # find next emb
             if self.teacher_forcing and self.training:
                 w_t = gold[:, t]
@@ -284,6 +284,7 @@ class ConvFrameMaskDecoderProgressMonitor(nn.Module):
             'out_action_low_mask': torch.stack(masks, dim=1),
             'out_attn_scores': torch.stack(attn_scores, dim=1),
             'out_subgoal': torch.stack(subgoals, dim=1),
+            'out_weighted_lang': torch.stack(weighted_attn, dim=1),
             'out_progress': torch.stack(progresses, dim=1),
             'state_t': state_t
         }
