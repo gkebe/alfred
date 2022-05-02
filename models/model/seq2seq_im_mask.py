@@ -359,7 +359,7 @@ class Module(Base):
             print(neg_subgoal.shape)
 
             t_loss = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
-            t_loss = t_loss * pad_valid.float()
+            t_loss = t_loss.view(-1) * pad_valid.float()
             t_loss = t_loss.mean()
             losses['triplet_loss'] = t_loss
 
