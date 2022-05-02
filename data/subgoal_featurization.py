@@ -16,7 +16,7 @@ import json
 import os
 from sentence_transformers import SentenceTransformer
 
-model = SentenceTransformer('sentence-transformers/paraphrase-MiniLM-L6-v2')
+model = SentenceTransformer('sentence-transformers/all-roberta-large-v1')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', type=str, help='directory where annotations are saved', required=True)
