@@ -36,13 +36,13 @@ class Dataset(object):
         return vocab.word2index([w.strip().lower() for w in words], train=train)
 
 
-    def preprocess_splits(self, splits):
+    def preprocess_splits(self, splits, freeze_vocab=False):
         '''
         saves preprocessed data as jsons in specified folder
         '''
         for k, d in splits.items():
             print('Preprocessing {}'.format(k))
-            train_mode = 'test' not in k
+            train_mode = 'test' not in k and not freeze_vocab
 
             # debugging:
             if self.args.fast_epoch:

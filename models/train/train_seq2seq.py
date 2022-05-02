@@ -90,12 +90,14 @@ if __name__ == '__main__':
     # preprocess and save
     if args.preprocess:
         vocab = None
+        freeze_vocab = False
         if args.vocab:
             vocab = torch.load(args.vocab)
+            freeze_vocab = True
 
         print("\nPreprocessing dataset and saving to %s folders ... This will take a while. Do this once as required." % args.pp_folder)
         dataset = Dataset(args, vocab)
-        dataset.preprocess_splits(splits)
+        dataset.preprocess_splits(splits, freeze_vocab)
         vocab = torch.load(os.path.join(args.dout, "%s.vocab" % args.pp_folder))
     else:
         vocab = torch.load(os.path.join(args.data, "%s.vocab" % args.pp_folder))
