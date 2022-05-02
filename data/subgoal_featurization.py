@@ -40,6 +40,8 @@ with open(args.splits_json, 'r') as json_file:
     splits_dict = json.loads(json_file.read())
 
 for split, ann_list in tqdm(splits_dict.items()):
+    if "test" in split:
+        continue
     for ann in tqdm(ann_list):
         if ann["task"] in features:
             continue
