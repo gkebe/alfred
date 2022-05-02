@@ -83,6 +83,7 @@ for split, ann_list in tqdm(splits_dict.items()):
             continue
         with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_0.json"), 'r') as ann_file:
             ann_json = json.loads(ann_file.read())
+            action_high_seq = ann_json["num"]["action_high"]
             pddl_plan = ann_json["plan"]["high_pddl"]
         subgoal_features = {}
         for step in pddl_plan:
@@ -116,6 +117,10 @@ for split, ann_list in tqdm(splits_dict.items()):
                 else:
                     subgoal_neg = "NoOp"
 
+            if subgoal_neg not in subgoal_id:
+                i = step["high_idx"]
+                subgoal_id[subgoal_neg] = int(str(action_high_seq[i]["action"]) + "".join([str(j) for j in action_high_seq[i]["action_high_args"]]))
+                subgoal_embeddings[subgoal_id[subgoal_neg]] = proc_subgoal(subgoal_neg)
 
             subgoal_features[step["high_idx"]] = {"pos": subgoal_id[subgoal_pos],
                                                   "neg": subgoal_id[subgoal_neg]}
