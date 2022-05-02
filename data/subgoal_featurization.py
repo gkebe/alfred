@@ -50,8 +50,6 @@ for split, ann_list in tqdm(splits_dict.items()):
     if "test" in split:
         continue
     for ann in tqdm(ann_list):
-        if ann["task"] in features:
-            continue
         with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_0.json"), 'r') as ann_file:
             ann_json = json.loads(ann_file.read())
             pddl_plan = ann_json["plan"]["high_pddl"]
