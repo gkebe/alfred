@@ -71,7 +71,7 @@ for split, ann_list in tqdm(splits_dict.items()):
             subgoal_name = action + args
             if subgoal_name not in subgoal_id:
                 i = step["high_idx"]
-                subgoal_id[subgoal_name] = int(str(action_high_seq[i]["action"]) + "".join([str(j) for j in action_high_seq[i]["action_args"]]))
+                subgoal_id[subgoal_name] = int(str(action_high_seq[i]["action"]) + "".join([str(j) for j in action_high_seq[i]["action_high_args"]]))
                 subgoal_embeddings[subgoal_id[subgoal_name]] = proc_subgoal(subgoal_name)
 
 features = {"subgoal_id":subgoal_id, "subgoal_embeddings":subgoal_embeddings}
