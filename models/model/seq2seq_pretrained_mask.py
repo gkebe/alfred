@@ -173,7 +173,7 @@ class Module(Base):
                 feat[k] = pad_seq
             else:
                 # default: tensorize and pad sequence
-                seqs = [torch.tensor(vv, device=device, dtype=torch.float if ('frames' in k) else torch.long) for vv in v]
+                seqs = [torch.tensor(vv, device=device, dtype=torch.float if ('frames' in k or k in ['subgoal_pos', 'subgoal_neg']) else torch.long) for vv in v]
                 pad_seq = pad_sequence(seqs, batch_first=True, padding_value=self.pad)
                 feat[k] = pad_seq
 
