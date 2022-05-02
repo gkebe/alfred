@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_templated_goals', help='use templated goals instead of human-annotated goal descriptions (only available for train set)', action='store_true')
     parser.add_argument('--resume', help='load a checkpoint')
 
-    parser.add_argument('--subgoal_embedding', help='use subgoal embeddings')
+    parser.add_argument('--subgoal_embedding', help='use subgoal embeddings', action='store_true')
     parser.add_argument('--vocab', help='load vocab from another dataset')
     parser.add_argument('--load_dec_weights', help='load decoder weights from another model')
     parser.add_argument('--pretrained_model', help='pretrained language model to use in seq2seq_pretrained_mask', default='bert')
