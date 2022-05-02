@@ -89,7 +89,7 @@ for split, ann_list in tqdm(splits_dict.items()):
             chosen_num_args = 0
             if options[chosen_action]:
                 chosen_num_args = max(list(options[chosen_action].keys()))
-            for i, subgoal_arg in emunerate(step["discrete_action"]["args"]):
+            for i, subgoal_arg in enumerate(step["discrete_action"]["args"]):
                 subgoal_pos += f" {subgoal_arg}"
                 if i not in options[chosen_action]:
                     continue
