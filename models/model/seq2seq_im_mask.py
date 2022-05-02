@@ -354,10 +354,6 @@ class Module(Base):
             pos_subgoal = feat['subgoal_pos'].view(-1, anchor_lang.shape[-1])
             neg_subgoal = feat['subgoal_neg'].view(-1, anchor_lang.shape[-1])
 
-            print(anchor_lang.shape)
-            print(pos_subgoal.shape)
-            print(neg_subgoal.shape)
-
             t_loss = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
             t_loss = t_loss.view(-1) * pad_valid.float()
             t_loss = t_loss.mean()

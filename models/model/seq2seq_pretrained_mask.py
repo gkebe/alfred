@@ -355,9 +355,10 @@ class Module(Base):
 
         # subgoal triplet loss
         if self.args.subgoal_embedding:
-            anchor_lang = out['out_weighted_lang']
-            pos_subgoal = feat['subgoal_pos']
-            neg_subgoal = feat['subgoal_neg']
+            anchor_lang = out['out_weighted_lang'].view(-1, out['out_weighted_lang'].shape[-1])
+            pos_subgoal = feat['subgoal_pos'].view(-1, anchor_lang.shape[-1])
+            neg_subgoal = feat['subgoal_neg'].view(-1, anchor_lang.shape[-1])
+
             t_loss = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
             t_loss = t_loss.view(-1) * pad_valid.float()
             t_loss = t_loss.mean()
