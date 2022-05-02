@@ -351,8 +351,8 @@ class Module(Base):
         # subgoal triplet loss
         if self.args.subgoal_embedding:
             anchor_lang = out['out_weighted_lang']
-            pos_subgoal = feat['subgoal_pos']
-            neg_subgoal = feat['subgoal_neg']
+            pos_subgoal = torch.stack(feat['subgoal_pos'])
+            neg_subgoal = torch.stack(feat['subgoal_neg'])
             losses['triplet_loss'] = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
 
         return losses
