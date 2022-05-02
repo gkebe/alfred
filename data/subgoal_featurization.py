@@ -51,7 +51,7 @@ for split, ann_list in tqdm(splits_dict.items()):
             subgoal_utterance = step["discrete_action"]["action"]
             for subgoal_arg in step["discrete_action"]["args"]:
                 subgoal_utterance += f" {subgoal_arg}"
-            subgoal_features[pddl_plan["high_idx"]] = subgoal_utterance
+            subgoal_features[step["high_idx"]] = subgoal_utterance
             print(subgoal_utterance)
         features[ann['task']] =subgoal_features
 
