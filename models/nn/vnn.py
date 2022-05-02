@@ -177,7 +177,7 @@ class ConvFrameMaskDecoder(nn.Module):
             else:
                 w_t = action_t.max(1)[1]
             e_t = self.emb(w_t)
-
+        print(torch.stack(weighted_attn, dim=1))
         results = {
             'out_action_low': torch.stack(actions, dim=1),
             'out_action_low_mask': torch.stack(masks, dim=1),
