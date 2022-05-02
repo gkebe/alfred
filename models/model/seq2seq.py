@@ -9,7 +9,7 @@ from torch import nn
 from tensorboardX import SummaryWriter
 from tqdm import trange
 import pickle
-
+from torch.nn import functional as F
 
 def cosine_triplet_loss(margin=0.4):
     lossf = lambda a, p, n: torch.clamp(F.cosine_similarity(a, n) - F.cosine_similarity(a, p) + margin, 0.0,
