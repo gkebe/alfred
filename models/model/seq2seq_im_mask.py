@@ -83,6 +83,11 @@ class Module(Base):
                     subgoal_progress = [(i+1)/float(num_actions) for i in range(num_actions)]
                     feat['subgoal_progress'].append(subgoal_progress)
 
+                # subgoal embedding
+                if self.args.subgoal_embedding:
+                    feat['subgoal_pos'].append(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["pos"])
+                    feat['subgoal_neg'].append(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"]["neg"])
+
             #########
             # inputs
             #########
@@ -189,6 +194,7 @@ class Module(Base):
 
     def forward(self, feat, max_decode=300):
         cont_lang, enc_lang = self.encode_lang(feat)
+        feat.update({"lang_anchor" : cont_lang})
         state_0 = cont_lang, torch.zeros_like(cont_lang)
         frames = self.vis_dropout(feat['frames'])
         res = self.dec(enc_lang, frames, max_decode=max_decode, gold=feat['action_low'], state_0=state_0)
@@ -339,6 +345,13 @@ class Module(Base):
             pg_loss = pg_loss.view(-1) * pad_valid.float()
             progress_loss = pg_loss.mean()
             losses['progress_aux'] = self.args.pm_aux_loss_wt * progress_loss
+
+        # subgoal triplet loss
+        if self.args.subgoal_embedding:
+            anchor_lang = feat['lang_anchor']
+            pos_subgoal = feat['subgoal_pos']
+            neg_subgoal = feat['subgoal_neg']
+            losses['triplet_loss'] = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
 
         return losses
 

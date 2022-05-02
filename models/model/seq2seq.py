@@ -10,6 +10,12 @@ from tensorboardX import SummaryWriter
 from tqdm import trange
 import pickle
 
+
+def cosine_triplet_loss(margin=0.4):
+    lossf = lambda a, p, n: torch.clamp(F.cosine_similarity(a, n) - F.cosine_similarity(a, p) + margin, 0.0,
+                                        2.0 + margin)
+    return lossf
+
 class Module(nn.Module):
 
     def __init__(self, args, vocab):
@@ -28,6 +34,7 @@ class Module(nn.Module):
 
         if args.subgoal_embedding:
             self.subgoal_features = pickle.load(open(os.path.join(args.data, "subgoal_features.pkl"), "rb"))
+            self.triplet_loss = cosine_triplet_loss(margin=0.4)
 
         # emb modules
         self.emb_word = nn.Embedding(len(vocab['word']), args.demb)
