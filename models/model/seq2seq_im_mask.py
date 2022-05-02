@@ -90,6 +90,7 @@ class Module(Base):
                                                              device=device, dtype=torch.float) for i in subgoal_idx]))
                     feat['subgoal_neg'].append(torch.stack([torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["neg"],
                                                              device=device, dtype=torch.float) for i in subgoal_idx]))
+                    print(feat['subgoal_pos'])
 
             #########
             # inputs
