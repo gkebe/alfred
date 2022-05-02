@@ -95,13 +95,14 @@ for split, ann_list in tqdm(splits_dict.items()):
                     continue
                 arg_options = options[chosen_action][i]
                 if subgoal_arg in arg_options:
-                    if not (same and i == chosen_num_args - 1) and random.choice([0] * 3 + [1]) == 1:
+                    if not (same and i == chosen_num_args - 1) and (random.choice([0] * 3 + [1]) == 1):
                         arg_options = [subgoal_arg]
                     else:
                         same = False
                         arg_options.remove(subgoal_arg)
-
-                subgoal_neg += f" {random.choice(arg_options)}"
+                subgoal_neg = "NoOp"
+                if len(arg_options):
+                    subgoal_neg += f" {random.choice(arg_options)}"
 
             print(f"Pos: {subgoal_pos}")
             print(f"Neg: {subgoal_neg}")
