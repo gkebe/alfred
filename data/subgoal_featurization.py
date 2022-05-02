@@ -45,7 +45,11 @@ with open(args.splits_json, 'r') as json_file:
 
 options = {}
 subgoal_id = {}
+action_id = {}
+arg_id = {}
 subgoal_embeddings = {}
+
+
 for split, ann_list in tqdm(splits_dict.items()):
     if "test" in split:
         continue
@@ -60,18 +64,21 @@ for split, ann_list in tqdm(splits_dict.items()):
             action = step["discrete_action"]["action"]
             if action not in options:
                 options[action] = {}
-            action_args = ""
+                action_id[action] = action_high_seq[step["high_idx"]]["action"]
+            action_args = []
             for i, subgoal_arg in enumerate(step["discrete_action"]["args"]):
                 if i not in options[action]:
                     options[action][i] = []
                 if subgoal_arg not in options[action][i]:
                     options[action][i].append(subgoal_arg)
-                action_args += f" {subgoal_arg}"
+                if subgoal_arg not in arg_id:
+                    arg_id[subgoal_arg] = action_high_seq[step["high_idx"]]["action_high_args"][i]
+                action_args.append(subgoal_arg)
 
-            subgoal_name = action + action_args
+            subgoal_name = action + " " + " ".join(action_args)
             if subgoal_name not in subgoal_id:
                 i = step["high_idx"]
-                subgoal_id[subgoal_name] = int(str(action_high_seq[i]["action"]) + "".join([str(j) for j in action_high_seq[i]["action_high_args"]]))
+                subgoal_id[subgoal_name] = int(str(action_id[action]) + "".join([str(arg_id[j]) for j in action_args]))
                 subgoal_embeddings[subgoal_id[subgoal_name]] = proc_subgoal(subgoal_name)
 
 features = {"subgoal_id":subgoal_id, "subgoal_embeddings":subgoal_embeddings}
@@ -113,13 +120,15 @@ for split, ann_list in tqdm(splits_dict.items()):
                         same = False
                         arg_options.remove(subgoal_arg)
                 if len(arg_options):
-                    subgoal_neg += f" {random.choice(arg_options)}"
+                    chosen_arg = random.choice(arg_options)
+                    chosen_args.append(chosen_arg)
+                    subgoal_neg += f" {chosen_arg}"
                 else:
                     subgoal_neg = "NoOp"
 
             if subgoal_neg not in subgoal_id:
                 i = step["high_idx"]
-                subgoal_id[subgoal_neg] = int(str(action_high_seq[i]["action"]) + "".join([str(j) for j in action_high_seq[i]["action_high_args"]]))
+                subgoal_id[subgoal_neg] = int(str(action_id[chosen_action]) + "".join([str(arg_id[j]) for j in chosen_args]))
                 subgoal_embeddings[subgoal_id[subgoal_neg]] = proc_subgoal(subgoal_neg)
 
             subgoal_features[step["high_idx"]] = {"pos": subgoal_id[subgoal_pos],
