@@ -15,14 +15,18 @@ import argparse
 import json
 import os
 from sentence_transformers import SentenceTransformer
+import random
 
 model = SentenceTransformer('sentence-transformers/all-roberta-large-v1')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', type=str, help='directory where annotations are saved', required=True)
 parser.add_argument('--splits_json', type=str, help='json file with train/val/test splits', required=True)
+parser.add_argument('--seed', type=float, help='random seed is 71',
+                    default=71)
 args = parser.parse_args()
 
+random.seed(args.seed)
 document_embeddings = flair.embeddings.DocumentPoolEmbeddings([flair.embeddings.BertEmbeddings()])
 
 def proc_subgoal(t):
@@ -44,7 +48,7 @@ options = {}
 for split, ann_list in splits_dict.items():
     if "test" in split:
         continue
-    for ann in tqdm(ann_list):
+    for ann in ann_list:
         if ann["task"] in features:
             continue
         with open(os.path.join(args.data_dir, ann["task"], "pp", f"ann_0.json"), 'r') as ann_file:
