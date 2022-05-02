@@ -60,15 +60,15 @@ for split, ann_list in tqdm(splits_dict.items()):
             action = step["discrete_action"]["action"]
             if action not in options:
                 options[action] = {}
-            args = ""
+            action_args = ""
             for i, subgoal_arg in enumerate(step["discrete_action"]["args"]):
                 if i not in options[action]:
                     options[action][i] = []
                 if subgoal_arg not in options[action][i]:
                     options[action][i].append(subgoal_arg)
-                args += f" {subgoal_arg}"
+                action_args += f" {subgoal_arg}"
 
-            subgoal_name = action + args
+            subgoal_name = action + action_args
             if subgoal_name not in subgoal_id:
                 i = step["high_idx"]
                 subgoal_id[subgoal_name] = int(str(action_high_seq[i]["action"]) + "".join([str(j) for j in action_high_seq[i]["action_high_args"]]))
