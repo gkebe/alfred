@@ -86,7 +86,9 @@ for split, ann_list in tqdm(splits_dict.items()):
                 subgoal_neg = random.choice(action_options)
 
             chosen_action = subgoal_neg
-            chosen_num_args = max(list(options[chosen_action].keys()))
+            chosen_num_args = 0
+            if options[chosen_action]:
+                chosen_num_args = max(list(options[chosen_action].keys()))
             for i, subgoal_arg in emunerate(step["discrete_action"]["args"]):
                 subgoal_pos += f" {subgoal_arg}"
                 if i not in options[chosen_action]:
