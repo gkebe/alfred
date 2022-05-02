@@ -323,7 +323,7 @@ class Module(nn.Module):
         save = torch.load(fsave)
         model = cls(save['args'], save['vocab'])
         model.load_state_dict(save['model'])
-        if has_attr(model.arg, "load_dec_weights") and model.args.load_dec_weights:
+        if hasattr(model.args, "load_dec_weights") and model.args.load_dec_weights:
             dec_list = [f"dec.{i}" for i in model.dec.state_dict()] + \
                        [f"emb_action_low.{i}" for i in model.emb_action_low.state_dict()]
 
