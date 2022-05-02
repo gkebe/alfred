@@ -78,7 +78,7 @@ class EvalTask(Eval):
             # check if <<stop>> was predicted
             if m_pred['action_low'] == cls.STOP_TOKEN:
                 print("\tpredicted STOP")
-                outcome = "Agent stopped before reaching goal" % t
+                outcome = "Agent stopped before reaching goal"
                 break
 
             # get action and mask
