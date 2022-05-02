@@ -48,8 +48,8 @@ for split, ann_list in tqdm(splits_dict.items()):
             pddl_plan = ann_json["plan"]["high_pddl"]
         subgoal_features = {}
         for step in pddl_plan:
-            subgoal_utterance = subgoal_features["discrete_action"]["action"]
-            for subgoal_arg in subgoal_features["discrete_action"]["args"]:
+            subgoal_utterance = step["discrete_action"]["action"]
+            for subgoal_arg in step["discrete_action"]["args"]:
                 subgoal_utterance += f" {subgoal_arg}"
             subgoal_features[pddl_plan["high_idx"]] = subgoal_utterance
             print(subgoal_utterance)
