@@ -35,7 +35,7 @@ class Module(nn.Module):
         if args.subgoal_embedding:
             self.subgoal_features = pickle.load(open(os.path.join(args.data, "subgoal_features_.pkl"), "rb"))
             self.subgoal_embeddings = self.subgoal_features["subgoal_embeddings"]
-            self.subgoal_ids = self.subgoal_features["subgoal_ids"]
+            self.subgoal_ids = self.subgoal_features["subgoal_id"]
 
             self.triplet_loss = cosine_triplet_loss(margin=0.4)
             self.hard_triplet = False
