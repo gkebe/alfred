@@ -100,10 +100,10 @@ class Module(Base):
                             subgoal_id = int(str(subgoal["action"]) + "".join([str(j) for j in subgoal["action_high_args"]]))
                             subgoal_labels.append(subgoal_id)
                             if subgoal_id not in feat["subgoals"]:
-                                subgoals_mask.append([0]*len(feat["subgoals"]) + [1])
+                                subgoals_mask.append([1]*len(feat["subgoals"]) + [0])
                                 feat["subgoals"].append(subgoal_id)
                             else:
-                                subgoals_mask.append([0] * feat["subgoals"].index(subgoal_id) + [1])
+                                subgoals_mask.append([1] * feat["subgoals"].index(subgoal_id) + [0])
                         feat['subgoal_label'].append(subgoal_labels)
                         feat['subgoal_mask'].append(subgoals_mask)
 
@@ -185,6 +185,8 @@ class Module(Base):
                 feat[k] = pad_seq
             elif k in {'subgoals'}:
                 feat[k] = torch.tensor([self.subgoal_embeddings[vv] for vv in v], device=device, dtype=torch.float)
+            elif k in {'subgoal_mask'}:
+                print(feat[k])
             else:
                 # default: tensorize and pad sequence
                 seqs = [torch.tensor(vv, device=device, dtype=torch.float if ('frames' in k or k in ['subgoal_pos', 'subgoal_neg']) else torch.long) for vv in v]
