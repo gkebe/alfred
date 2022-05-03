@@ -387,7 +387,7 @@ class Module(Base):
 
                 similarity_matrix = similarity_matrix * feat['subgoal_mask'].view(-1, similarity_matrix.shape[1])
 
-                closest_neg = torch.argmax(similarity_matrix, dim=1).unsqueeze(-1).unsqueeze(-1).repeat(1, 1, subgoals.shape[2])
+                closest_neg = torch.argmax(similarity_matrix, dim=1).unsqueeze(-1).repeat(1, subgoals.shape[2])
 
                 print(closest_neg.shape)
 
