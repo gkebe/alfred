@@ -374,7 +374,8 @@ class Module(Base):
             if self.hard_triplets:
                 subgoals = feat['subgoals']
                 subgoals = subgoals.unsqueeze(0).repeat(anchor_lang.shape[0],1, 1)
-                similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[0],1),
+
+                similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[1],1),
                                                  subgoals)
                 similarity_matrix = similarity_matrix * feat['subgoals_mask'].view(-1, similarity_matrix.shape[1])
                 neg_subgoal = subgoals.gather(torch.argmax(similarity_matrix, dim=1))
