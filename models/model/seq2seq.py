@@ -38,7 +38,7 @@ class Module(nn.Module):
             self.subgoal_ids = self.subgoal_features["subgoal_id"]
 
             self.triplet_loss = cosine_triplet_loss(margin=0.4)
-            self.hard_triplet = False
+            self.hard_triplets = False
 
         # emb modules
         self.emb_word = nn.Embedding(len(vocab['word']), args.demb)
@@ -128,7 +128,7 @@ class Module(nn.Module):
                 total_train_loss.append(float(sum_loss))
                 train_iter += self.args.batch
             if self.args.subgoal_embedding:
-                self.hard_triplet = False
+                self.hard_triplets = False
             ## compute metrics for train (too memory heavy!)
             # m_train = {k: sum(v) / len(v) for k, v in m_train.items()}
             # m_train.update(self.compute_metric(p_train, train))
@@ -219,7 +219,7 @@ class Module(nn.Module):
             pprint.pprint(stats)
 
             if self.args.subgoal_embedding:
-                self.hard_triplet = True
+                self.hard_triplets = True
 
     def run_pred(self, dev, args=None, name='dev', iter=0):
         '''
