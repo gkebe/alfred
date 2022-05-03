@@ -105,7 +105,7 @@ class Module(Base):
                             else:
                                 subgoals_mask.append([0] * feat["subgoals"].index(subgoal_id) + [1])
                         feat['subgoal_label'].append(subgoal_labels)
-                        feat['subgoal_mask'].extend(subgoals_mask)
+                        feat['subgoal_mask'].append(torch.tensor(subgoals_mask))
 
 
             #########
@@ -380,7 +380,6 @@ class Module(Base):
 
                 similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[1],1),
                                                  subgoals, dim=2)
-                print(similarity_matrix.shape)
 
                 similarity_matrix = similarity_matrix * feat['subgoal_mask'].view(-1, similarity_matrix.shape[1])
                 neg_subgoal = subgoals.gather(torch.argmax(similarity_matrix, dim=1))
