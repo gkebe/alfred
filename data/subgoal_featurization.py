@@ -74,8 +74,9 @@ for split, ann_list in tqdm(splits_dict.items()):
                 if subgoal_arg not in arg_id:
                     arg_id[subgoal_arg] = action_high_seq[step["high_idx"]]["action_high_args"][i]
                 action_args.append(subgoal_arg)
-
-            subgoal_name = action + " " + " ".join(action_args)
+            subgoal_name = action
+            if len(action_args):
+                subgoal_name += " " + " ".join(action_args)
             if subgoal_name not in subgoal_id:
                 i = step["high_idx"]
                 subgoal_id[subgoal_name] = int(str(action_id[action]) + "".join([str(arg_id[j]) for j in action_args]))
