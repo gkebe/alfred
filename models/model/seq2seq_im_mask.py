@@ -188,8 +188,8 @@ class Module(Base):
             elif k in {'subgoal_mask'}:
                 dim_3 = feat["subgoals"].shape[0]
                 dim_2 = max([len(vv) for vv in v])
-                feat[k] = torch.stack([F.pad(torch.stack([F.pad(torch.tensor(vvv), (0, dim_3 - len(vvv)), "constant", 1) for vvv in vv]),
-                                 (0,0,0,dim_2 - len(vv)), "constant", 1) for vv in v], device=device, dtype=torch.float)
+                feat[k] = torch.stack([F.pad(torch.stack([F.pad(torch.tensor(vvv, device=device, dtype=torch.float), (0, dim_3 - len(vvv)), "constant", 1) for vvv in vv]),
+                                 (0,0,0,dim_2 - len(vv)), "constant", 1) for vv in v])
             else:
                 # default: tensorize and pad sequence
                 seqs = [torch.tensor(vv, device=device, dtype=torch.float if ('frames' in k or k in ['subgoal_pos', 'subgoal_neg']) else torch.long) for vv in v]
