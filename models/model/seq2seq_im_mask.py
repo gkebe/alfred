@@ -105,7 +105,7 @@ class Module(Base):
                             else:
                                 subgoals_mask.append([0] * feat["subgoals"].index(subgoal_id) + [1])
                         feat['subgoal_label'].append(subgoal_labels)
-                        feat['subgoal_mask'].append(subgoals_mask)
+                        feat['subgoal_mask'].extend(subgoals_mask)
 
 
             #########
