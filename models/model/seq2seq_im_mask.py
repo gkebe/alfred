@@ -386,11 +386,13 @@ class Module(Base):
                                                  subgoals, dim=2)
 
                 similarity_matrix = similarity_matrix * feat['subgoal_mask'].view(-1, similarity_matrix.shape[1])
-                print(torch.argmax(similarity_matrix, dim=1).shape)
 
-                neg_subgoal = subgoals.gather(1,
-                                              torch.argmax(similarity_matrix, dim=1).unsqueeze(-1).unsqueeze(-1).repeat(
-                                                  1, subgoals.shape[1], subgoals.shape[2])).view(-1, anchor_lang.shape[-1])
+                closest_neg = torch.argmax(similarity_matrix, dim=1).unsqueeze(-1).unsqueeze(-1).repeat(1, subgoals.shape[1], subgoals.shape[2])
+
+                print(closest_neg.shape)
+
+
+                neg_subgoal = subgoals.gather(1,closest_neg).view(-1, anchor_lang.shape[-1])
 
                 print(neg_subgoal.shape)
 
