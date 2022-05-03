@@ -375,6 +375,9 @@ class Module(Base):
                 subgoals = feat['subgoals']
                 subgoals = subgoals.unsqueeze(0).repeat(anchor_lang.shape[0],1, 1)
 
+                print(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[1],1).shape)
+                print(subgoals.shape)
+                
                 similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[1],1),
                                                  subgoals)
                 similarity_matrix = similarity_matrix * feat['subgoal_mask'].view(-1, similarity_matrix.shape[1])
