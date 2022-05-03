@@ -188,7 +188,9 @@ class Module(Base):
             elif k in {'subgoal_mask'}:
                 dim_3 = feat["subgoals"].shape[0]
                 dim_2 = max([len(vv) for vv in v])
-                
+
+                print(dim_3)
+                print(dim_2)
                 feat[k] = [F.pad(torch.stack([F.pad(torch.tensor(vvv), (0, dim_3 - len(vvv)), "constant", 1) for vvv in vv]),
                                  (0,dim_2 - len(vv),0,0), "constant", 1).shape for vv in v]
                 print(feat[k])
