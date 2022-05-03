@@ -38,7 +38,7 @@ class Module(nn.Module):
             self.subgoal_ids = self.subgoal_features["subgoal_id"]
 
             self.triplet_loss = cosine_triplet_loss(margin=0.4)
-            self.hard_triplets = True
+            self.hard_triplets = False
 
         # emb modules
         self.emb_word = nn.Embedding(len(vocab['word']), args.demb)
