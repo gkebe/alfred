@@ -186,7 +186,7 @@ class Module(Base):
             elif k in {'subgoals'}:
                 feat[k] = torch.tensor([self.subgoal_embeddings[vv] for vv in v], device=device, dtype=torch.float)
             elif k in {'subgoal_mask'}:
-                print([[len(vvv) for vvv in vv] for vv in v])
+                print(max([max([len(vvv) for vvv in vv]) for vv in v]))
             else:
                 # default: tensorize and pad sequence
                 seqs = [torch.tensor(vv, device=device, dtype=torch.float if ('frames' in k or k in ['subgoal_pos', 'subgoal_neg']) else torch.long) for vv in v]
