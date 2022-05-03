@@ -191,9 +191,9 @@ class Module(Base):
 
                 print(dim_3)
                 print(dim_2)
-                feat[k] = [F.pad(torch.stack([F.pad(torch.tensor(vvv), (0, dim_3 - len(vvv)), "constant", 1) for vvv in vv]),
-                                 (0,0,0,dim_2 - len(vv)), "constant", 1).shape for vv in v]
-                print(feat[k])
+                feat[k] = torch.stack([F.pad(torch.stack([F.pad(torch.tensor(vvv), (0, dim_3 - len(vvv)), "constant", 1) for vvv in vv]),
+                                 (0,0,0,dim_2 - len(vv)), "constant", 1) for vv in v])
+                print(feat[k].shape)
             else:
                 # default: tensorize and pad sequence
                 seqs = [torch.tensor(vv, device=device, dtype=torch.float if ('frames' in k or k in ['subgoal_pos', 'subgoal_neg']) else torch.long) for vv in v]
