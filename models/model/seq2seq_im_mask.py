@@ -186,7 +186,11 @@ class Module(Base):
             elif k in {'subgoals'}:
                 feat[k] = torch.tensor([self.subgoal_embeddings[vv] for vv in v], device=device, dtype=torch.float)
             elif k in {'subgoal_mask'}:
-                feat[k] = [torch.stack([torch.tensor(vvv + [1]*(feat["subgoals"].shape[0]-len(vvv))) for vvv in vv]).shape for vv in v]
+                dim_3 = feat["subgoals"].shape[0]
+                dim_2 = max([len(vv) for vv in v])
+                
+                feat[k] = [F.pad(torch.stack([F.pad(torch.tensor(vvv), (0, dim_3 - len(vvv)), "constant", 1) for vvv in vv]),
+                                 (0,dim_2 - len(vv),0,0), "constant", 1).shape for vv in v]
                 print(feat[k])
             else:
                 # default: tensorize and pad sequence
