@@ -384,7 +384,6 @@ class Module(Base):
             t_loss = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
             t_loss = t_loss.view(-1) * pad_valid.float()
             t_loss = t_loss.mean()
-            print(t_loss)
             losses['triplet_loss'] = t_loss
 
         return losses
