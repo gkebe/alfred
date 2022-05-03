@@ -371,7 +371,7 @@ class Module(Base):
         if self.args.subgoal_embedding:
             anchor_lang = out['out_weighted_lang'].view(-1, out['out_weighted_lang'].shape[-1])
             pos_subgoal = feat['subgoal_pos'].view(-1, anchor_lang.shape[-1])
-            if self.hard_triplet:
+            if self.hard_triplets:
                 subgoals = feat['subgoals']
                 subgoals = subgoals.unsqueeze(0).repeat(anchor_lang.shape[0],1, 1)
                 similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[0],1),
