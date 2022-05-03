@@ -380,14 +380,14 @@ class Module(Base):
                 subgoals = feat['subgoals']
                 subgoals = subgoals.unsqueeze(0).repeat(anchor_lang.shape[0],1, 1)
 
-                print(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[1],1).shape)
                 print(subgoals.shape)
-                print(feat['subgoal_mask'].shape)
 
                 similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[1],1),
                                                  subgoals, dim=2)
 
                 similarity_matrix = similarity_matrix * feat['subgoal_mask'].view(-1, similarity_matrix.shape[1])
+                print(similarity_matrix.shape)
+                
                 neg_subgoal = subgoals.gather(torch.argmax(similarity_matrix, dim=1))
             else:
                 neg_subgoal = feat['subgoal_neg'].view(-1, anchor_lang.shape[-1])
