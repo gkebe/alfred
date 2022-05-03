@@ -97,7 +97,7 @@ class Module(Base):
 
                         for i in ex["num"]['low_to_high_idx']:
                             subgoal = ex["num"]["action_high"][i]
-                            subgoal_id = int(str(subgoal["action"]) + "".join([str(j) for j in subgoal["action_args"]]))
+                            subgoal_id = int(str(subgoal["action"]) + "".join([str(j) for j in subgoal["action_high_args"]]))
                             subgoal_labels.append(subgoal_id)
                             if subgoal_id not in feat["subgoals"]:
                                 subgoals_mask.append([0]*len(feat["subgoals"]) + [1])
