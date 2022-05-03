@@ -192,7 +192,7 @@ class Module(Base):
                 print(dim_3)
                 print(dim_2)
                 feat[k] = [F.pad(torch.stack([F.pad(torch.tensor(vvv), (0, dim_3 - len(vvv)), "constant", 1) for vvv in vv]),
-                                 (0,dim_2 - len(vv),0,0), "constant", 1).shape for vv in v]
+                                 (0,0,0,dim_2 - len(vv)), "constant", 1).shape for vv in v]
                 print(feat[k])
             else:
                 # default: tensorize and pad sequence
