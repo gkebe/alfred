@@ -392,6 +392,8 @@ class Module(Base):
                                               torch.argmax(similarity_matrix, dim=1).unsqueeze(-1).unsqueeze(-1).repeat(
                                                   1, subgoals.shape[1], subgoals.shape[2])).view(-1, anchor_lang.shape[-1])
 
+                print(neg_subgoal.shape)
+
             else:
                 neg_subgoal = feat['subgoal_neg'].view(-1, anchor_lang.shape[-1])
 
