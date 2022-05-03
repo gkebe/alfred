@@ -100,12 +100,12 @@ class Module(Base):
                             subgoal_id = int(str(subgoal["action"]) + "".join([str(j) for j in subgoal["action_high_args"]]))
                             subgoal_labels.append(subgoal_id)
                             if subgoal_id not in feat["subgoals"]:
-                                subgoals_mask.append([0]*len(feat["subgoals"]) + [1])
+                                subgoals_mask.append(torch.tensor([0]*len(feat["subgoals"]) + [1]))
                                 feat["subgoals"].append(subgoal_id)
                             else:
-                                subgoals_mask.append([0] * feat["subgoals"].index(subgoal_id) + [1])
+                                subgoals_mask.append(torch.tensor([0] * feat["subgoals"].index(subgoal_id) + [1]))
                         feat['subgoal_label'].append(subgoal_labels)
-                        feat['subgoal_mask'].append(torch.tensor(subgoals_mask))
+                        feat['subgoal_mask'].append(torch.stack(subgoals_mask))
 
 
             #########
