@@ -86,10 +86,27 @@ class Module(Base):
                 # subgoal embedding
                 if self.args.subgoal_embedding:
                     subgoal_idx = ex['num']['low_to_high_idx']
-                    feat['subgoal_pos'].append(torch.stack([torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["pos"],
+                    feat['subgoal_pos'].append(torch.stack([torch.tensor(self.subgoal_embeddings[self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["pos"]],
                                                              device=device, dtype=torch.float) for i in subgoal_idx]))
-                    feat['subgoal_neg'].append(torch.stack([torch.tensor(self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["neg"],
+                    if not self.hard_triplets:
+                        feat['subgoal_neg'].append(torch.stack([torch.tensor(self.subgoal_embeddings[self.subgoal_features[f"{'/'.join(ex['root'].split('/')[-2:])}"][i]["neg"]],
                                                              device=device, dtype=torch.float) for i in subgoal_idx]))
+                    else:
+                        subgoal_labels = []
+                        subgoals_mask = []
+
+                        for i in ex["num"]['low_to_high_idx']:
+                            subgoal = ex["num"]["action_high"][i]
+                            subgoal_id = int(str(subgoal["action"]) + "".join([str(j) for j in subgoal["action_args"]]))
+                            subgoal_labels.append(subgoal_id)
+                            if subgoal_id not in feat["subgoals"]:
+                                subgoals_mask.append([0]*len(feat["subgoals"]) + [1])
+                                feat["subgoals"].append(subgoal_id)
+                            else:
+                                subgoals_mask.append([0] * feat["subgoals"].index(subgoal_id) + [1])
+                        feat['subgoal_label'].append(subgoal_labels)
+                        feat['subgoal_mask'].append(subgoals_mask)
+
 
             #########
             # inputs
@@ -166,6 +183,8 @@ class Module(Base):
                 seqs = [torch.tensor(vv, device=device, dtype=torch.float) for vv in v]
                 pad_seq = pad_sequence(seqs, batch_first=True, padding_value=self.pad)
                 feat[k] = pad_seq
+            elif k in {'subgoals'}:
+                feat[k] = torch.tensor([self.subgoal_embeddings[vv] for vv in v], device=device, dtype=torch.float)
             else:
                 # default: tensorize and pad sequence
                 seqs = [torch.tensor(vv, device=device, dtype=torch.float if ('frames' in k or k in ['subgoal_pos', 'subgoal_neg']) else torch.long) for vv in v]
@@ -352,7 +371,15 @@ class Module(Base):
         if self.args.subgoal_embedding:
             anchor_lang = out['out_weighted_lang'].view(-1, out['out_weighted_lang'].shape[-1])
             pos_subgoal = feat['subgoal_pos'].view(-1, anchor_lang.shape[-1])
-            neg_subgoal = feat['subgoal_neg'].view(-1, anchor_lang.shape[-1])
+            if self.hard_triplet:
+                subgoals = feat['subgoals']
+                subgoals = subgoals.unsqueeze(0).repeat(anchor_lang.shape[0],1, 1)
+                similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[0],1),
+                                                 subgoals)
+                similarity_matrix = similarity_matrix * feat['subgoals_mask'].view(-1, similarity_matrix.shape[1])
+                neg_subgoal = subgoals.gather(torch.argmax(similarity_matrix, dim=1))
+            else:
+                neg_subgoal = feat['subgoal_neg'].view(-1, anchor_lang.shape[-1])
 
             t_loss = self.triplet_loss(anchor_lang, pos_subgoal, neg_subgoal)
             t_loss = t_loss.view(-1) * pad_valid.float()

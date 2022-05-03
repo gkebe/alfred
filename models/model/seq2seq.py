@@ -33,8 +33,12 @@ class Module(nn.Module):
         self.vocab = vocab
 
         if args.subgoal_embedding:
-            self.subgoal_features = pickle.load(open(os.path.join(args.data, "subgoal_features.pkl"), "rb"))
+            self.subgoal_features = pickle.load(open(os.path.join(args.data, "subgoal_features_.pkl"), "rb"))
+            self.subgoal_embeddings = self.subgoal_features["subgoal_embeddings"]
+            self.subgoal_ids = self.subgoal_features["subgoal_ids"]
+
             self.triplet_loss = cosine_triplet_loss(margin=0.4)
+            self.hard_triplet = False
 
         # emb modules
         self.emb_word = nn.Embedding(len(vocab['word']), args.demb)
@@ -123,7 +127,8 @@ class Module(nn.Module):
                 sum_loss = sum_loss.detach().cpu()
                 total_train_loss.append(float(sum_loss))
                 train_iter += self.args.batch
-
+            if self.args.subgoal_embedding:
+                self.hard_triplet = False
             ## compute metrics for train (too memory heavy!)
             # m_train = {k: sum(v) / len(v) for k, v in m_train.items()}
             # m_train.update(self.compute_metric(p_train, train))
@@ -212,6 +217,9 @@ class Module(nn.Module):
                     for k, v in stats[split].items():
                         self.summary_writer.add_scalar(split + '/' + k, v, train_iter)
             pprint.pprint(stats)
+
+            if self.args.subgoal_embedding:
+                self.hard_triplet = True
 
     def run_pred(self, dev, args=None, name='dev', iter=0):
         '''
