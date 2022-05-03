@@ -392,7 +392,7 @@ class Module(Base):
                 print(closest_neg.shape)
 
 
-                neg_subgoal = subgoals.gather(1,closest_neg)
+                neg_subgoal = subgoals.gather(1,closest_neg).view(-1, anchor_lang.shape[-1])
 
                 print(neg_subgoal.shape)
 
