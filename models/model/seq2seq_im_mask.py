@@ -380,6 +380,8 @@ class Module(Base):
 
                 similarity_matrix = F.cosine_similarity(anchor_lang.unsqueeze(1).repeat(1,subgoals.shape[1],1),
                                                  subgoals, dim=2)
+                print(similarity_matrix.shape)
+
                 similarity_matrix = similarity_matrix * feat['subgoal_mask'].view(-1, similarity_matrix.shape[1])
                 neg_subgoal = subgoals.gather(torch.argmax(similarity_matrix, dim=1))
             else:
