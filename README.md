@@ -111,7 +111,14 @@ Train models:
 $ cd $ALFRED_ROOT
 $ python models/train/train_seq2seq.py --data data/json_feat_2.1.0 --model seq2seq_im_mask --dout exp/model:{model},name:pm_and_subgoals_01 --splits data/splits/oct21.json --gpu --batch 8 --pm_aux_loss_wt 0.1 --subgoal_aux_loss_wt 0.1
 ```
+Featurization:
+```bash
+python data/bert_featurization.py --data_dir data/shared/{your_data}/ --splits_json data/shared/2022_04_10.json
 
+python data/move_speech_files.py --data_dir ./data/shared/{your_data}/ --speech_dir ./data/shared/dataset/ --splits_json ./data/shared/2022_04_10.json
+
+python data/wav2vec2_featurization.py --data_dir data/shared/{your_data}/ --splits_json data/shared/2022_04_10.json
+```
 ## More Info 
 
 - [**Dataset**](data/): Downloading full dataset, Folder structure, JSON structure.
