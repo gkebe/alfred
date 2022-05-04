@@ -33,6 +33,8 @@ Run Alfred:
 * First run on new data: add *--preprocess* and *--no_alignment* flags
   ```bash
   python models/train/train_seq2seq.py --data data/shared/{new_data_dir} --model seq2seq_im_mask --dout exp/model:{model},name:pm_and_subgoals_01 --splits data/shared/{split_file_name} --gpu --batch 8 --pm_aux_loss_wt 0.1 --subgoal_aux_loss_wt 0.1 --preprocess --no_alignment
+  
+  python models/train/train_seq2seq.py --data data/shared/{new_data_dir} --model seq2seq_pretrained_mask --dout exp/model:{model},name:pm_and_subgoals_01 --splits data/shared/{split_file_name} --gpu --batch 8 --pm_aux_loss_wt 0.1 --subgoal_aux_loss_wt 0.1 --pretrained_model bert
   ```
 * No need for *--preprocess* and *--no_alignment* flags in subsequent runs for the same data
 
