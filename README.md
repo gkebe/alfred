@@ -56,7 +56,7 @@ bash scripts/build.sh
 
 Run it
 ```bash
-bash scripts/run.sh
+bash scripts/run.sh /scratch/p/data/alfred:/scratch/p/data/alfred
 ```
 
 Start and test xserver
