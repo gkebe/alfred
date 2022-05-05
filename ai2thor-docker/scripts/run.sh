@@ -7,4 +7,4 @@ then
 else
     EXTRA="-v $1"
 fi
-docker run --rm -it --privileged -v $ALFREDPATH:/home/$USER/alfred -v ~/.ssh:/home/$USER/.ssh -v ~/.torch:/home/$USER/.torch -e ALFRED_ROOT=/home/$USER/alfred -e HOME=/home/$USER -p 8888:8888 --user $USER --ipc=host --network=host -v /usr/bin/nvidia-xconfig:/usr/bin/nvidia-xconfig --gpus all  $EXTRA ai2thor-docker bash
+docker run --rm -it --privileged -v $ALFREDPATH:/home/iral/alfred -v ~/.ssh:/home/iral/.ssh -v ~/.torch:/home/iral/.torch -e ALFRED_ROOT=/home/iral/alfred -e HOME=/home/iral -p 8888:8888 --user iral --ipc=host --network=host -v /usr/bin/nvidia-xconfig:/usr/bin/nvidia-xconfig --gpus all  $EXTRA ai2thor-docker bash
