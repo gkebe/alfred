@@ -1,6 +1,11 @@
 ARG CUDA_VERSION
-
 FROM nvidia/cuda:$CUDA_VERSION-devel-ubuntu18.04
+
+RUN apt-key del "7fa2af80" \
+&& export this_distro="$(cat /etc/os-release | grep '^ID=' | awk -F'=' '{print $2}')" \
+&& export this_version="$(cat /etc/os-release | grep '^VERSION_ID=' | awk -F'=' '{print $2}' | sed 's/[^0-9]*//g')" \
+&& apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/${this_distro}${this_version}/x86_64/3bf863cc.pub"
+
 ARG NVIDIA_VERSION
 
 ARG USER_NAME
